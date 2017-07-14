@@ -1,0 +1,129 @@
+{% extends "bootstrap/base.html" %}
+
+{% block head%}
+{{ super() }}
+    <style>
+        .error{
+            color:red;
+        }
+    </style>
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link href="{{ url_for('static', filename='bootstrap.mini.css' )}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css' )}}" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='bootstrap-datetimepicker.min.css' )}}" rel="stylesheet" media="screen">
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.8.3.min.js') }}" charset="UTF-8"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.min.js' )}}"></script>
+    <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+    <link href="http://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/daterangepicker.css" rel="stylesheet">
+    <!-- blueimp Gallery styles -->
+    <link rel="stylesheet" href="http://blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
+
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='jQuery-File-Upload/css/jquery.fileupload.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='jQuery-File-Upload/css/jquery.fileupload-ui.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='jPages-master/css/jPages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='jPages-master/css/animate.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='mycss/ck-switch.css') }}">
+    <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.15/css/jquery.dataTables.css">
+
+{% endblock %}
+
+
+{% block title %}R2D2{% endblock %}
+{% block modal %}{% endblock %}
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+         <div class="container">
+             {% if current_user.is_authenticated %}
+
+             <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown" style="font-size: 16px">
+                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+                            <span></span>
+                            告警查询<strong class="caret"></strong>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/">R2D2告警</a></li>
+                                <li><a href="/syslog_search">SYSLOG</a></li>
+                            </ul>
+                    </li>
+                    <li class="dropdown" style="font-size: 16px">
+                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+                            <span></span>
+                            值班管理 <strong class="caret"></strong>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/print_duty_schedule">值班查询</a></li>
+                                {% if current_user.is_administrator() %}
+                                <li><a href="/upload_duty_schedule">值班表上传</a></li>
+                                {% endif %}
+                            </ul>
+                    </li>
+
+                    {% if current_user.is_snoc() %}
+
+                    <li class="dropdown" style="font-size: 16px">
+                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+                            <span></span>
+
+                            设置 <strong class="caret"></strong>
+                            </a>
+                            <ul class="dropdown-menu">
+                                {% if current_user.is_snoc() %}
+                                    <li><a href="/params_config">参数设置</a></li>
+                                    <li><a href="/syslog_config">SYSLOG设置</a></li>
+                                    <li><a href="/add_device">添加设备</a></li>
+                                    <li><a href="/user_register">添加用户</a></li>
+                                {% endif %}
+
+                                <li><a href="/local_user_check">本地用户查询</a></li>
+                                {% if current_user.is_administrator() %}
+                                    <li><a href="/licence_control">许可证管理</a></li>
+                                {% endif %}
+
+                            </ul>
+                            {% endif %}
+                    </li>
+
+
+
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('auth.logout') }}">Sign Out</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
+                    {% endif %}
+                </ul>
+             </div>
+             {% endif %}
+         </div>
+</div>
+{% endblock %}
+
+{% block content %} 
+<div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+{% block page_content %}{% endblock %} </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {{ pagedown.include_pagedown() }}
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.8.3.min.js') }}" charset="UTF-8"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js' )}}"></script>
+    <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
+
+    <script type="text/javascript">
+    </script>
+{% endblock %}
+
