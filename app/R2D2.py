@@ -223,7 +223,7 @@ def per_ont_losi_alarm(start_time, end_time, alarm_times=100):
             alarm_list.append(c)
             logger.debug(c)
 
-    SM = SendMail.sendmail(subject='ONT LOSi 告警汇总', mail_to='597796137@qq.com')
+    SM = SendMail.sendmail(subject='ONT LOSi 告警汇总', mail_to='x@x.com')
     content = '\n'.join(alarm_list)
     msg = SM.addMsgText(content, 'plain', 'gb2312')
     SM.send(addmsgtext=msg)
