@@ -32,7 +32,7 @@ def get_device_info(machine_room_id):
 
 def allowed_file(filename):
     return '.' in filename and \
-        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def gen_file_name(filename):
@@ -47,6 +47,7 @@ def gen_file_name(filename):
         i += 1
 
     return filename
+
 
 IGNORED_FILES = set(['.gitignore'])
 
@@ -69,8 +70,12 @@ def index():
         search_date = request.form.get('search_date')
         if search_date:
             start_time, stop_time = search_date.split(' - ')
-        start_time = datetime.datetime.strptime(start_time + ' 00:00:00', '%Y-%m-%d %H:%M:%S') if search_date else datetime.datetime(2000, 1, 1, 0, 0, 0)
-        stop_time = datetime.datetime.strptime(stop_time + ' 23:59:59', '%Y-%m-%d %H:%M:%S') if search_date else datetime.datetime(2100, 12, 31, 23, 59, 59)
+        start_time = datetime.datetime.strptime(start_time + ' 00:00:00',
+                                                '%Y-%m-%d %H:%M:%S') if search_date else datetime.datetime(2000, 1, 1,
+                                                                                                           0, 0, 0)
+        stop_time = datetime.datetime.strptime(stop_time + ' 23:59:59',
+                                               '%Y-%m-%d %H:%M:%S') if search_date else datetime.datetime(2100, 12, 31,
+                                                                                                          23, 59, 59)
 
         print(start_time, stop_time)
 
@@ -95,7 +100,9 @@ def index():
             if request.form.get('latest_editor') and Post.query.filter_by(author_id=latest_editor).all():
                 data = [[ui.id,
                          ui.content,
-                         all_user_dict[post_info[ui.id]['author_id']]['username'] if ui.id in post_info else '',
+                         all_user_dict[post_info[ui.id]['author_id']]['username'] if ui.id in post_info and
+                                                                                     post_info[ui.id][
+                                                                                         'author_id'] in all_user_dict else '',
                          post_info[ui.id]['timestamp'] if ui.id in post_info else '',
                          call_record[ui.lastCallId] if ui.lastCallId in call_record else '',
                          ui.create_time,
@@ -106,7 +113,9 @@ def index():
                                              <img src="../static/edit.png" alt="" title=""
                                              border="0" /></a>"""]
                         for ui in AlarmRecord.query.filter(AlarmRecord.content.like(search_content),
-                                                           AlarmRecord.create_time.between(start_time, stop_time)).order_by(AlarmRecord.create_time.desc()).all()
+                                                           AlarmRecord.create_time.between(start_time,
+                                                                                           stop_time)).order_by(
+                        AlarmRecord.create_time.desc()).all()
                         if ui.id in post_info and post_info[ui.id]['author_id'] == int(latest_editor)]
 
             elif request.form.get('latest_editor') and not Post.query.filter_by(author_id=latest_editor).all():
@@ -115,7 +124,9 @@ def index():
             else:
                 data = [[ui.id,
                          ui.content,
-                         all_user_dict[post_info[ui.id]['author_id']]['username'] if ui.id in post_info else '',
+                         all_user_dict[post_info[ui.id]['author_id']]['username'] if ui.id in post_info and
+                                                                                     post_info[ui.id][
+                                                                                         'author_id'] in all_user_dict else '',
                          post_info[ui.id]['timestamp'] if ui.id in post_info else '',
                          call_record[ui.lastCallId] if ui.lastCallId in call_record else '',
                          ui.create_time,
@@ -126,13 +137,17 @@ def index():
                                                              <img src="../static/edit.png" alt="" title=""
                                                              border="0" /></a>"""]
                         for ui in AlarmRecord.query.filter(AlarmRecord.content.like(search_content),
-                                                           AlarmRecord.create_time.between(start_time, stop_time)).order_by(AlarmRecord.create_time.desc()).all()]
+                                                           AlarmRecord.create_time.between(start_time,
+                                                                                           stop_time)).order_by(
+                        AlarmRecord.create_time.desc()).all()]
 
             recordsTotal = len(data)
         else:
             data = [[ui.id,
                      ui.content,
-                     all_user_dict[post_info[ui.id]['author_id']]['username'] if ui.id in post_info else '',
+                     all_user_dict[post_info[ui.id]['author_id']]['username'] if ui.id in post_info.keys() and
+                                                                                 post_info[ui.id][
+                                                                                     'author_id'] in all_user_dict.keys() else '',
                      post_info[ui.id]['timestamp'] if ui.id in post_info else '',
                      call_record[ui.lastCallId] if ui.lastCallId in call_record else '',
                      ui.create_time,
@@ -179,9 +194,10 @@ def get_alarm_detail_info():
     call_record = {r.callId: r.phoneNum
                    for r in CallRecordDetail.query.filter(CallRecordDetail.respCode.__eq__(000000)).all()}
 
-    alarm_detail_info = {'phoneNum': call_record[alarm_record.lastCallId] if alarm_record.lastCallId in call_record.keys() else None,
-                         'call_status': alarm_record_state[alarm_record.state],
-                         'times': alarm_record.calledTimes}
+    alarm_detail_info = {
+        'phoneNum': call_record[alarm_record.lastCallId] if alarm_record.lastCallId in call_record.keys() else None,
+        'call_status': alarm_record_state[alarm_record.state],
+        'times': alarm_record.calledTimes}
 
     return jsonify(json.dumps(alarm_detail_info, ensure_ascii=False))
 
@@ -389,8 +405,9 @@ def check_appointed_time_duty_engineer():
     logger.info('User {} is checking appointed time duty engineer'.format(session['LOGINNAME']))
     start_time, stop_time = re.findall(r'(\d+:\d+)--(\d+:\d+)', j.get('selected_duty_time'))[0]
     duty_attended_time_id = DutyAttendedTime.query.filter_by(start_time=start_time, stop_time=stop_time).first()
-    duty_engineer = DutySchedule.query.filter_by(date_time=datetime.datetime.strptime(j.get('selected_date'), '%Y-%m-%d'),
-                                                 attended_time_id=duty_attended_time_id.id).all()
+    duty_engineer = DutySchedule.query.filter_by(
+        date_time=datetime.datetime.strptime(j.get('selected_date'), '%Y-%m-%d'),
+        attended_time_id=duty_attended_time_id.id).all()
 
     r_json = {}
     for e in duty_engineer:
@@ -467,7 +484,8 @@ def user_delete():
     if user_tobe_deleted.email == session['LOGINUSER']:
         flash('不能删除自己')
     else:
-        if Role.query.filter_by(id=session['ROLE']).first().permissions < Role.query.filter_by(name='SNOC').first().permissions:
+        if Role.query.filter_by(id=session['ROLE']).first().permissions < Role.query.filter_by(
+                name='SNOC').first().permissions:
             logger.debug(session['ROLE'])
             flash('你没有权限删除他人账户')
         else:
@@ -703,9 +721,9 @@ def syslog_search():
                                                       Syslog.logtime.between(start_time, stop_time),
                                                       Syslog.serverty.like(serverty)).offset(page_start).limit(length)]
             recordsTotal = Syslog.query.filter(Syslog.device_ip.like(device_ip),
-                                                      Syslog.logmsg.like(logmsg),
-                                                      Syslog.logtime.between(start_time, stop_time),
-                                                      Syslog.serverty.like(serverty)).count()
+                                               Syslog.logmsg.like(logmsg),
+                                               Syslog.logtime.between(start_time, stop_time),
+                                               Syslog.serverty.like(serverty)).count()
         else:
             data = [[syslog.id,
                      device_list.get(syslog.device_ip),
@@ -729,7 +747,7 @@ def syslog_search():
 @permission_required(Permission.NETWORK_MANAGER)
 def licence_control():
     expire_date, expire_in, pubkey = get_pubkey()
-    expire_date = time.strftime('%Y-%m-%d',time.localtime(expire_date))
+    expire_date = time.strftime('%Y-%m-%d', time.localtime(expire_date))
     pubkey = pubkey.replace('\n', '\r\n')
     return render_template('licence_control.html',
                            expire_date=expire_date,
@@ -759,7 +777,6 @@ def params_config():
 @login_required
 @permission_required(Permission.NETWORK_MANAGER)
 def update_wechat_config():
-
     params = request.get_data()
     jl = params.decode('utf-8')
     j = json.loads(jl)
@@ -787,7 +804,8 @@ def update_licence():
         expire_date, expire_in, pubkey = get_pubkey()
         expire_date = time.strftime('%Y-%m-%d', time.localtime(expire_date))
         pubkey = pubkey.replace('\n', '\r\n')
-        return jsonify(json.dumps({'status': 'OK', 'expire_date': expire_date, 'expire_in': expire_in, 'pubkey': pubkey}))
+        return jsonify(
+            json.dumps({'status': 'OK', 'expire_date': expire_date, 'expire_in': expire_in, 'pubkey': pubkey}))
     else:
         return jsonify(json.dumps({'status': 'FAIL'}))
 
@@ -992,7 +1010,6 @@ def area_config():
             flash('插入数据失败')
         return redirect(url_for('.area_config'))
 
-
     POSTS_PER_PAGE = 10
 
     if page < 1:
@@ -1038,7 +1055,7 @@ def userinfo_update():
             userinfo_tobe_changed.duty = duty
         if phone_number:
             userinfo_tobe_changed.phoneNum = phone_number
-        if password or username or phone_number or int(area)>0 or int(role)>0 or int(duty)>0:
+        if password or username or phone_number or int(area) > 0 or int(role) > 0 or int(duty) > 0:
             try:
                 db.session.add(userinfo_tobe_changed)
                 db.session.commit()
@@ -1061,7 +1078,8 @@ def userinfo_update():
 def add_device():
     form = DeviceForm()
     if form.validate_on_submit():
-        logger.info('User {} add device on machine room {}'.format(session.get('LOGINNAME'), form.machine_room_name.data))
+        logger.info(
+            'User {} add device on machine room {}'.format(session.get('LOGINNAME'), form.machine_room_name.data))
         try:
             device = Device(device_name=form.device_name.data,
                             ip=form.ip.data,

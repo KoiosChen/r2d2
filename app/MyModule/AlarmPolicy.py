@@ -77,7 +77,17 @@ def alarm(**kwargs):
                         'call again to the engineer who answered the phone just now')
 
             not_fixed_record.append(find_md5)
-            alarm_not_fixed += find_md5.content
+            # 查找是否存在该条告警的附加信息 20170714 目前仅有批量光猫下线对应的信息
+            alarm_attachment = OntAccountInfo.query.filter_by(hash_id=content_md5).first()
+
+            # 如果告警存在附加信息，则添加在告警内容后, 此处可能存在字符过多不能发送的问题
+            if alarm_attachment:
+                alarm_a = '\n附加信息：' + alarm_attachment.account_info
+            else:
+                alarm_a = ''
+
+            alarm_not_fixed += find_md5.content + alarm_a
+
             if start_num < end_num:
                 seqnum.update_seq(start_num)
         else:

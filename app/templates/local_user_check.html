@@ -85,7 +85,7 @@
             var duty = $('#duty').val();
             var phone_number = $("#phone_number").val();
             var reg = /^1[3|4|5|7|8][0-9]{9}$/;
-            if (reg.test(phone_number)) {
+            if (reg.test(phone_number) || !phone_number) {
                 $.ajax({
                     type: "post",
                     url: "userinfo_update",

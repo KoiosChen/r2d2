@@ -463,3 +463,4 @@ syslog_facility = {0: "kernel",
                    23: "local 7"
                  }
 aes_key = 'koiosr2d2c3p0000'
+max_ont_down_in_sametime = 4

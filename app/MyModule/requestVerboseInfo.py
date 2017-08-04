@@ -1,8 +1,9 @@
 import json
 import requests
 
+
 def request_ontinfo(**kwargs):
-    ontinfo_url = 'http://127.0.0.1:54322/get_ontinfo'
+    ontinfo_url = 'http://127.0.0.1:5000/get_ontinfo'
     headers = {
         'Content-Type': 'application/json',
         'Cache-Control': 'no-store'

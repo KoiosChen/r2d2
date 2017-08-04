@@ -8,7 +8,7 @@ from collections import defaultdict
 from . import db
 from . import logger
 from .MyModule import Snmp, AlarmPolicy, GetData, GetCactiPic, Telnet5680T, SendMail, HashContent, requestVerboseInfo
-from .models import UpsInfo, PonAlarmRecord, Device, OntAccountInfo
+from .models import UpsInfo, PonAlarmRecord, Device, OntAccountInfo, max_ont_down_in_sametime
 
 
 def nesteddict():
@@ -30,13 +30,13 @@ def cacti_db_monitor(db_info=None):
     for info in host_offline:
         alarm_content.append('id: ' + str(info['id']) + ' ' + info['description'] +
                              ' 于 ' + info['status_fail_date'].strftime('\'%Y-%m-%d %H:%M:%S\'') + ' 离线' +
-                             ', IP: ' + info['hostname'] +'\n\n')
+                             ', IP: ' + info['hostname'] + '\n\n')
 
     catalog2 = ('id', 'name', 'thold_hi', 'thold_low', 'thold_alert', 'host_id', 'graph_id', 'rra_id')
     thold_alert = getdata.get_result(query='thold_alert', catalog=catalog2)
 
     for alert in thold_alert:
-        pic_url = GetCactiPic.get_cacti_pic('cacti_view_pic_url',
+        pic_url = GetCactiPic.get_cacti_pic(action='cacti_view_pic_url',
                                             graph_id=alert['graph_id'],
                                             rra_id='5',
                                             db_info=db_info)
@@ -115,13 +115,34 @@ def pon_alarm_in_time_range(start_time, end_time):
                 ' 无收光, 疑似断线.\n'
             alarm_list.append(c)
 
-            # 此处可根据该端口注册的信息，查询用户注册结果来判断涉及的社区
-            ont_verbose = requestVerboseInfo.request_ontinfo(device_ip=olarm.ip,
-                                                             fsp=[str(olarm.frame), str(olarm.slot), str(olarm.port)],
-                                                             ontid_list='all')
+            hash_id = HashContent.md5_content(c)
 
-            if ont_verbose.get('status') == 'OK':
-                pass
+            if not OntAccountInfo.query.filter_by(hash_id=hash_id).first():
+
+                # 此处可根据该端口注册的信息，查询用户注册结果来判断涉及的社区
+                ont_verbose = requestVerboseInfo.request_ontinfo(device_ip=olarm.ip,
+                                                                 fsp=[str(olarm.frame), str(olarm.slot),
+                                                                      str(olarm.port)],
+                                                                 ontid_list='all')
+
+                if ont_verbose.get('status') == 'OK':
+                    account_info_list = ont_verbose['content']  # list
+                    community_list = []
+                    for account_info in account_info_list:
+                        if account_info['customerListInfo']['customerList'] and len(
+                                account_info['customerListInfo']['customerList']) > 0:
+                            customer_info = account_info['customerListInfo']['customerList'][0]
+                            logger.debug(customer_info)
+                            community_list.append(customer_info['communityName'])
+
+                    attach = str(set(community_list))
+
+                    add_verbose_info = OntAccountInfo(hash_id=hash_id, account_info=attach)
+                    db.session.add(add_verbose_info)
+                    db.session.commit()
+
+                    db.session.expire_all()
+                    db.session.close()
 
             logger.warn('{} 此端口断线过 {} 次'.format(c, str(olarm.fail_times)))
 
@@ -151,7 +172,7 @@ def lots_ont_losi_alarm(start_time, end_time):
                                         ont.ip, ont.frame, ont.slot, ont.port,
                                         ont.last_fail_time)].append(ont.ontid)
         for sametimedown_info, sametimedown_ontid in dict_ont_down_in_same_time.items():
-            if len(set(sametimedown_ontid)) > 1:
+            if len(set(sametimedown_ontid)) > max_ont_down_in_sametime:
                 c = sametimedown_info[0] + '( ' + sametimedown_info[1] + ' ) 的' + \
                     str(sametimedown_info[2]) + '/' + str(sametimedown_info[3]) + '/' + str(sametimedown_info[4]) + \
                     '于' + sametimedown_info[5].strftime('%Y-%m-%d %H:%M:%S') + ' 同时因光的原因下线.共' + \
@@ -175,10 +196,11 @@ def lots_ont_losi_alarm(start_time, end_time):
                         account_info_list = ont_verbose['content']  # list
                         attach = ''  # 附件告警信息
                         for account_info in account_info_list:
-                            if len(account_info['customerListInfo']['customerList']) > 0:
+                            if account_info['customerListInfo']['customerList'] and len(
+                                    account_info['customerListInfo']['customerList']) > 0:
                                 customer_info = account_info['customerListInfo']['customerList'][0]
-                                attach += '\n' + customer_info['accountId'] + ' ' + \
-                                          customer_info['communityName'] + '/' + customer_info['aptNo']
+                                attach += '\n' + str(customer_info['accountId']) + ' ' + \
+                                          customer_info['communityName'] + '/' + customer_info['aptNo'] + '\n'
 
                         add_verbose_info = OntAccountInfo(hash_id=hash_id, account_info=attach)
                         db.session.add(add_verbose_info)
@@ -191,7 +213,7 @@ def lots_ont_losi_alarm(start_time, end_time):
                 alarm_list.append(c)
                 logger.debug(c)
 
-    if len(alarm_list) > 0: # 如果存在告警，则调用alarm方法
+    if len(alarm_list) > 0:  # 如果存在告警，则调用alarm方法
         AlarmPolicy.alarm(alarm_content=alarm_list, alarm_type='4')
     else:
         logger.info('There is no alarm')
@@ -215,12 +237,31 @@ def per_ont_losi_alarm(start_time, end_time, alarm_times=100):
                 str(ont.frame) + '/' + str(ont.slot) + '/' + str(ont.port) + ' ONT ID:' + str(ont.ontid) \
                 + '因光的原因累积断线超过' + str(alarm_times) + '次, 请尽快排查\n\n'
 
+            ont_verbose = requestVerboseInfo.request_ontinfo(device_ip=ont.ip,
+                                                             fsp=[ont.frame, ont.slot, ont.port],
+                                                             ontid_list=[ont.ontid])
+            attach = ''  # 附加告警信息
+            if ont_verbose.get('status') == 'OK':
+
+                # 将该条告警信息以MD5的方式作为唯一标签，把对应的ontid信息存储到OntAccountInfo表中
+                # 在AlarmPolicy.alarm中增加alarm_attach_detail方法对OntAccountInfo表的查询（通过MD5），
+                # 如果有，则发送微信的时候添加对应的用户信息
+
+                account_info_list = ont_verbose['content']  # list
+
+                for account_info in account_info_list:
+                    if len(account_info['customerListInfo']['customerList']) > 0:
+                        customer_info = account_info['customerListInfo']['customerList'][0]
+                        attach += '\n' + str(customer_info['accountId']) + ' ' + \
+                                  customer_info['communityName'] + '/' + customer_info['aptNo'] + ' ' + \
+                                  str(customer_info['mobilePhone']) + '\n'
+
             # 告警后fail_times计数器清零
             ont.fail_times = 0
             db.session.add(ont)
             db.session.commit()
 
-            alarm_list.append(c)
+            alarm_list.append(c + '\n' + attach)
             logger.debug(c)
 
     SM = SendMail.sendmail(subject='ONT LOSi 告警汇总', mail_to='597796137@qq.com')
@@ -448,7 +489,7 @@ def py_syslog_olt_monitor(host, logmsg):
         except Exception as e:
             try:
                 f, s, p = \
-                re.findall(r'FrameID:\s+(\d+),\s+SlotID:\s+(\d+),\s+PortID:\s+(\d+)', logmsg)[0]
+                    re.findall(r'FrameID:\s+(\d+),\s+SlotID:\s+(\d+),\s+PortID:\s+(\d+)', logmsg)[0]
                 pon_history = PonAlarmRecord.query.filter_by(ip=host, frame=f, slot=s, port=p, ontid='PON').first()
             except Exception as e:
                 logger.warning(e)
