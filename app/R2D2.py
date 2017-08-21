@@ -5,8 +5,7 @@ import re
 import threading
 import time
 from collections import defaultdict
-from . import db
-from . import logger
+from . import db, logger, redis_db
 from .MyModule import Snmp, AlarmPolicy, GetData, GetCactiPic, Telnet5680T, SendMail, HashContent, requestVerboseInfo
 from .models import UpsInfo, PonAlarmRecord, Device, OntAccountInfo, max_ont_down_in_sametime
 
@@ -57,12 +56,23 @@ def cacti_db_monitor(db_info=None):
 
 
 def ups_monitor():
-    ups_status = {'1': 'unknown', '2': 'online', '3': 'onBattery', '4': 'onBoost', '5': 'sleeping', '6': 'onBypass',
+    ups_status = {'1': 'unknown', '2': '（市电正常）online', '3': '(市电中断)onBattery', '4': 'onBoost', '5': 'sleeping',
+                  '6': 'onBypass',
                   '7': 'rebooting', '8': 'standBy', '9': 'onBuck'}
     ups = Snmp.Snmp()
     ups_info = UpsInfo.query.all()
     alarm_list = []
     for u in ups_info:
+        if redis_db.get('ups_status_' + u.ip):
+            pre_status = redis_db.get('ups_status_' + u.ip).decode()
+        else:
+            pre_status = None
+
+        if redis_db.get('ups_power_left_' + u.ip):
+            pre_power_left = redis_db.get('ups_status_' + u.ip).decode()
+        else:
+            pre_power_left = None
+
         logger.debug('Getting {} {} snmp info'.format(u.name, u.ip))
         ups.destHost = u.ip
         ups.community = u.community
@@ -80,14 +90,25 @@ def ups_monitor():
 
         snmp_status = \
             ups_status.get(snmp_result.get('status')) if ups_status.get(snmp_result.get('status')) else 'unknown'
-        snmp_power_left = int(snmp_result.get('power_left')) if snmp_result.get('power_left') else 61
+        snmp_power_left = int(snmp_result.get('power_left')) if snmp_result.get('power_left') else 80
 
-        if snmp_result.get('status') != '2':
-            s = u.name + ' UPS ' + u.ip + ' ' + snmp_status
+        if snmp_result.get('status') != '2' and (pre_status == '2' or pre_status is None):
+            s = u.name + ' UPS ' + u.ip + ' 于 ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())) + ' ' + snmp_status + '\n'
+            redis_db.set('ups_status_' + u.ip, snmp_result.get('status'))
             alarm_list.append(s)
 
-        if snmp_result.get('status') != '2' and snmp_power_left < 80:
-            s = u.name + ' UPS ' + u.ip + ' ' + 'UPS电力低于80%'
+        if snmp_result.get('status') != '2' and pre_power_left is not None and snmp_power_left < 80 <= int(pre_power_left):
+            s = u.name + ' UPS ' + u.ip + ' 于 ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())) + ' ' + '电力低于80%\n'
+            redis_db.set('ups_power_left_' + u.ip, snmp_power_left)
+            alarm_list.append(s)
+        elif snmp_power_left >= 80 or pre_power_left is None:
+            redis_db.set('ups_power_left_' + u.ip, snmp_power_left)
+
+        if snmp_result.get('status') == '2' and pre_status != '2':
+            logger.debug('pre_status {}'.format(pre_status))
+            s = u.name + ' UPS ' + u.ip + ' 于 ' + time.strftime("%Y-%m-%d %H:%M:%S",
+                                                                time.localtime(time.time())) + ' ' + snmp_status + '\n'
+            redis_db.set('ups_status_' + u.ip, snmp_result.get('status'))
             alarm_list.append(s)
 
     if len(alarm_list) > 0:
@@ -266,7 +287,7 @@ def per_ont_losi_alarm(start_time, end_time, alarm_times=100):
 
     SM = SendMail.sendmail(subject='ONT LOSi 告警汇总', mail_to='597796137@qq.com')
     content = '\n'.join(alarm_list)
-    msg = SM.addMsgText(content, 'plain', 'gb2312')
+    msg = SM.addMsgText(content, 'plain', 'GBK')
     SM.send(addmsgtext=msg)
 
 

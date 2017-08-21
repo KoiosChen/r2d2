@@ -9,6 +9,11 @@ from flask_apscheduler import APScheduler
 from flask_session import Session
 from flask_pagedown import PageDown
 import logging
+import redis
+
+
+# 用于存放监控记录信息，例如UPS前序状态，需要配置持久化
+redis_db = redis.Redis(host='localhost', port=6379, db=7)
 
 bootstrap = Bootstrap()
 mail = Mail()
