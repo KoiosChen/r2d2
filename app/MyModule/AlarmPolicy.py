@@ -39,7 +39,7 @@ def alarm(**kwargs):
         if find_md5:
             logger.debug('{} {}'.format(find_md5.id, find_md5.content_md5))
             end_num = int(call_interval/call_again)
-            seqnum = SeqPickle.Seq(find_md5.content_md5 + '.pkl')
+            seqnum = SeqPickle.Seq('tmp/' + find_md5.content_md5 + '.pkl')
             start_num = seqnum.last_seq + 1
 
         if not find_md5 \
@@ -189,7 +189,6 @@ def alarmMonitor():
                     try:
                         i = numberList.index(crgb.phoneNum) + 1
                     except Exception as e:
-                        print(e)
                         i = 0
                     break
 

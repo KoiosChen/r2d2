@@ -3,7 +3,7 @@ import sys
 import queue
 import threading
 import re
-from ..R2D2 import py_syslog_olt_monitor, general_syslog_monitor
+from ..r2d2.SyslogWorker import py_syslog_olt_monitor, general_syslog_monitor
 from ..models import SyslogAlarmConfig, Syslog, syslog_facility, syslog_serverty
 from .. import db, logger
 import datetime
@@ -32,20 +32,24 @@ def write_syslog_to_db(host, logmsg):
 
 
 def syslog_allocating(host, logmsg):
-    logger.debug('allocating syslog task')
-    syslog_alarm_config = {c.alarm_keyword: c.alarm_type for c in SyslogAlarmConfig.query.filter_by(alarm_status=1).all()}
+
+    syslog_alarm_config = [(c.alarm_keyword, c.alarm_type) for c in
+                           SyslogAlarmConfig.query.filter_by(alarm_status=1).order_by(
+                               SyslogAlarmConfig.alarm_level).all()]
     match_flag = False
-    for key, alarm_type in syslog_alarm_config.items():
+    for key, alarm_type in syslog_alarm_config:
         regex_ = re.compile(key)
         if re.search(regex_, logmsg):
             match_flag = True
             if alarm_type == 'olt':
+                logger.debug('allocating syslog task to olt syslog process')
                 py_syslog_olt_monitor(host, logmsg)
                 break
             elif alarm_type == 'filter':
-                logger.info('Syslog filtered {} {}.'.format(host, logmsg))
+                logger.debug('Syslog filtered {} {}.'.format(host, logmsg))
                 break
             else:
+                logger.debug('allocating syslog task to normal syslog precess')
                 write_syslog_to_db(host, logmsg)
                 general_syslog_monitor(host, logmsg)
                 break
@@ -105,7 +109,7 @@ def py_syslog():
             except Exception as e:
                 logger.warning(e)
                 sys.exit(1)
-        q.join()
+        # q.join()
 
     except Exception as e:
         logger.warning(e)

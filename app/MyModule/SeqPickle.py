@@ -121,8 +121,7 @@ def update_crypted_licence(crypt_licence):
         return False
     else:
         licence = lic_pkl.load_seq
-        for k, v in dic_new.items():
-            print(k, v)
+
         dic_new['privkey'] = licence['privkey']
         dic_new['pubkey'] = licence['pubkey']
         lic_pkl.update_seq(dic_new)
@@ -130,7 +129,6 @@ def update_crypted_licence(crypt_licence):
         # 如果许可证状态不可用,说明这时需要resume scheduler
         if licence['expire_in'] <= 0 or licence['expire_date'] <= licence['start_date'] or licence['status'] == '0':
             scheduler_resume()
-        print('update finished')
         return True
 
 

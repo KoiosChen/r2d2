@@ -12,7 +12,7 @@ class Config:
     SESSION_PERMANENT = True
     SESSION_USE_SIGNER = True
 
-    SQLALCHEMY_POOL_SIZE = 300
+    SQLALCHEMY_POOL_SIZE = 1000
     FLASKY_ADMIN = 'peter.chen@mbqianbao.com'
 
     # FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')

@@ -10,6 +10,15 @@ from flask_session import Session
 from flask_pagedown import PageDown
 import logging
 import redis
+from collections import defaultdict
+
+
+def nesteddict():
+    """
+    构造一个嵌套的字典
+    :return:
+    """
+    return defaultdict(nesteddict)
 
 
 # 用于存放监控记录信息，例如UPS前序状态，需要配置持久化

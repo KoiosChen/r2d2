@@ -15,17 +15,14 @@ class TelnetDevice:
         try:
             self.tn = telnetlib.Telnet(host, 23, self.timeout)
             self.tn.set_debuglevel(0)
-            print('login')
             time.sleep(self.command_interval)
 
             self.tn.expect([re.compile(b'name:'), ], self.timeout)
-            print('input username')
 
             self.tn.write(username.encode('utf-8') + b'\n')
             time.sleep(self.command_interval)
 
             self.tn.expect([b'password:', ], self.command_timeout)
-            print('input password')
 
             self.tn.write(password.encode('utf-8') + b'\n\n\n')
 
@@ -167,12 +164,9 @@ class TelnetDevice:
         time.sleep(self.command_interval)
         __, result = self.get_result(stop='config-if-epon', patern1=r'-----', patern2=r'active')
         if result:
-            print(result)
             result = str(result).strip().split()
-            print(result)
             # 因为OLT输出格式不同,但是ont_id总是在MAC字段前,所以index空MAC 减1 为ont_id
             point = result.index('--------------') - 1
-            print(result[point])
             return result[point]
         else:
             return False
@@ -193,14 +187,11 @@ class TelnetDevice:
         return self.get_result(stop='config-if-epon', patern1='', patern2='')[0]
 
     def find_loid(self, xr):
-        print(xr)
         self.tn.write(b'display current-configuration\n')
         time.sleep(self.command_interval)
         result = self.get_current(stop=r'config-if-epon', patern1=r'loid-auth', patern2=xr)
         if result:
-            print(result)
             result = str(result).strip().split(' ')
-            print(result)
             return result[5].strip("\"")
         else:
             return False
@@ -224,7 +215,6 @@ class TelnetDevice:
         self.tn.write(b'display ont info by-mac ' + mac.encode('utf8') + b'\n')
         time.sleep(self.command_interval)
         result, line_match = self.get_result(stop=r'\(config\)\#', patern1=r'F/S/P', patern2=':')
-        print(line_match)
         if line_match:
             find_result = str(line_match).replace(' ', '').strip('\'').split(':')
         else:
@@ -233,7 +223,6 @@ class TelnetDevice:
         ont_id = ''
         for line in result:
             if re.search(r'ONT-ID', line):
-                print(line)
                 ont_id = str(line).replace(' ', '').strip('\'').split(':')[1]
 
         return find_result[1] if find_result else False, ont_id, result

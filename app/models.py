@@ -313,7 +313,7 @@ class DutyAttendedTime(db.Model):
 class TokenRecord(db.Model):
     __tablename__ = 'token_record'
     unique_id = db.Column(db.String(128), primary_key=True)
-    token = db.Column(db.String(128), nullable=False)
+    token = db.Column(db.String(512), nullable=False)
     expire = db.Column(db.String(10))
     create_time = db.Column(db.DateTime)
 
@@ -464,3 +464,6 @@ syslog_facility = {0: "kernel",
                  }
 aes_key = 'koiosr2d2c3p0000'
 max_ont_down_in_sametime = 4
+
+temp_threshold = {'min': 20, 'max': 30}
+humi_threshold = {'min': 15, 'max': 70}

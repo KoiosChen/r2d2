@@ -5,10 +5,11 @@ from app import create_app, db, scheduler, logger
 from app.models import OntAccountInfo, Syslog, User, Role, MachineRoom, Device, AlarmRecord, DutyAttendedTime, DutySchedule, CONFIG_FILE_PATH
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
-from app.R2D2 import ups_monitor, unalarmed_polling, cacti_db_monitor,\
-    pon_state_check, pon_alarm_in_time_range, lots_ont_losi_alarm
-from app.MyModule import AlarmPolicy, PhoneNumber, AddDutyMember, OperateDutyArrange, WechatAlarm, GetCactiPic, \
-    py_syslog
+from app.r2d2.CactiMonitor import *
+from app.r2d2.ScheduleWorker import *
+from app.r2d2.UpsMonitor import *
+from app.r2d2.SyslogWorker import *
+from app.MyModule import AlarmPolicy, PhoneNumber, AddDutyMember, OperateDutyArrange, WechatAlarm, GetCactiPic
 from app.MyModule import SendMail, SeqPickle, SchedulerControl, requestVerboseInfo
 
 __author__ = 'Koios'
@@ -16,6 +17,7 @@ __author__ = 'Koios'
 app = create_app(os.getenv('FLASK_CONFIG') or 'production')
 manager = Manager(app)
 migrate = Migrate(app, db)
+
 
 def make_shell_context():
     return dict(app=app, db=db, User=User, Role=Role, MachineRoom=MachineRoom, Device=Device,

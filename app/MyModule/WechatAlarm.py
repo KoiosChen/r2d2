@@ -7,7 +7,7 @@ import json
 import requests
 import time
 from ..models import TokenRecord
-from .. import db
+from .. import db, logger
 import datetime
 from .GetConfig import get_config
 
@@ -99,6 +99,6 @@ class WechatAlarm:
         r = requests.post(self.send_sms_url % self.access_token,
                           data=json.dumps(send_content, ensure_ascii=False).encode('utf-8'), headers=self.headers)
         result = r.json()
-        print(result)
+        logger.debug(result)
 
 
