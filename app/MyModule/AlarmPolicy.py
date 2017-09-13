@@ -39,8 +39,9 @@ def alarm(**kwargs):
         if find_md5:
             logger.debug('{} {}'.format(find_md5.id, find_md5.content_md5))
             end_num = int(call_interval/call_again)
-            seqnum = SeqPickle.Seq('tmp/' + find_md5.content_md5 + '.pkl')
-            start_num = seqnum.last_seq + 1
+            # seqnum = SeqPickle.Seq('tmp/' + find_md5.content_md5 + '.pkl')
+            seqnum = SeqPickle.Seq(find_md5.content_md5)
+            start_num = int(seqnum.last_seq) + 1
 
         if not find_md5 \
                 or ((find_md5 and find_md5.state == 9)

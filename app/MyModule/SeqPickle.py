@@ -1,9 +1,7 @@
-from ..models import CONFIG_FILE_PATH, aes_key
-import os
-import pickle
+from ..models import aes_key
 import time
 import rsa
-from .. import logger
+from .. import logger, redis_db
 from .SchedulerControl import scheduler_pause, scheduler_resume
 from .AESCryptor import encrypt, decrypt
 import binascii
@@ -12,6 +10,7 @@ import json
 
 class Seq:
     def __init__(self, pkl_name):
+        """
         self.file = CONFIG_FILE_PATH + pkl_name
         if os.path.exists(self.file):
             seq_pkl = open(self.file, 'rb')
@@ -27,14 +26,26 @@ class Seq:
         else:
             self.init = True
             self.last_seq = 0
+        """
+        self.file = 'seq_pickle_' + pkl_name
+        if redis_db.get(self.file):
+            self.last_seq = redis_db.get('seq_pickle_' + pkl_name).decode()
+            self.init = False
+        else:
+            self.init = True
+            self.last_seq = 0
 
     def update_seq(self, seq):
+        """
         seq_pkl = open(self.file, 'wb')
         pickle.dump(seq, seq_pkl)
         seq_pkl.close()
+        """
+        redis_db.set(self.file, seq)
 
     @property
     def load_seq(self):
+        """
         if os.path.exists(self.file):
             seq_pkl = open(self.file, 'rb')
             if len(seq_pkl.read()) > 0:
@@ -46,6 +57,13 @@ class Seq:
             else:
                 seq_pkl.close()
                 return 0
+        else:
+            self.init = True
+            return 0
+        """
+        if redis_db.get(self.file):
+            self.init = False
+            return redis_db.get(self.file).decode()
         else:
             self.init = True
             return 0
@@ -64,15 +82,13 @@ def checkLicence(init='0'):
     check_licence = Seq('licence.pkl')
     if check_licence.init:
         init_json = init_licence(init)
-        check_licence.update_seq(init_json)
+        init_ = binascii.b2a_hex(init_json.encode()).decode()
+        check_licence.update_seq(init_)
         if init == '0':
             scheduler_pause()
-        return init_json
+        return init_
     else:
-        lp = check_licence.load_seq
-
-        print('load licecne.pkl', lp, type(lp))
-        print(lp['expire_in'], lp['expire_date'], lp['start_date'], lp['status'])
+        lp = json.loads(binascii.a2b_hex(check_licence.load_seq.encode()).decode())
 
         if lp['expire_in'] == 0 or lp['expire_date'] <= lp['start_date'] or lp['status'] == '0':
             logger.critical('The licence has been expired, '
@@ -83,7 +99,7 @@ def checkLicence(init='0'):
         else:
             lp['expire_in'] -= check_interval
 
-        check_licence.update_seq(lp)
+        check_licence.update_seq(binascii.b2a_hex(json.dumps(lp).encode()).decode())
         return lp
 
 
@@ -91,9 +107,9 @@ def init_licence(status):
     # 产生私钥
     init_days = 7
     (pubkey, privkey) = rsa.newkeys(2048)
+    pubkey = encrypt(pubkey.save_pkcs1().decode(), aes_key).decode()
+    privkey = encrypt(privkey.save_pkcs1().decode(), aes_key).decode()
     print(pubkey, privkey)
-    pubkey = encrypt(pubkey.save_pkcs1().decode(), aes_key)
-    privkey = encrypt(privkey.save_pkcs1().decode(), aes_key)
 
     init_data = {"init_date": time.time(),
                  "start_date": time.time(),
@@ -104,9 +120,9 @@ def init_licence(status):
                  "rules": "",
                  "author": "Koios",
                  "status": status}
-    print('init data', init_data)
 
-    return init_data
+    # return init_data
+    return json.dumps(init_data)
 
 
 def update_crypted_licence(crypt_licence):
@@ -117,14 +133,14 @@ def update_crypted_licence(crypt_licence):
 
     lic_pkl = Seq('licence.pkl')
     if lic_pkl.init:
-        lic_pkl.update_seq(init_licence('0'))
+        lic_pkl.update_seq(binascii.b2a_hex(init_licence('0').encode()).decode())
         return False
     else:
-        licence = lic_pkl.load_seq
+        licence = json.loads(binascii.a2b_hex(lic_pkl.load_seq.encode()).decode())
 
         dic_new['privkey'] = licence['privkey']
         dic_new['pubkey'] = licence['pubkey']
-        lic_pkl.update_seq(dic_new)
+        lic_pkl.update_seq(binascii.b2a_hex(json.dumps(dic_new).encode()).decode())
 
         # 如果许可证状态不可用,说明这时需要resume scheduler
         if licence['expire_in'] <= 0 or licence['expire_date'] <= licence['start_date'] or licence['status'] == '0':
@@ -137,8 +153,8 @@ def get_pubkey():
     if lic_pkl.init:
         return False
     else:
-        licence = lic_pkl.load_seq
-        decrypted_licence = decrypt(licence['pubkey'], aes_key)
+        licence = json.loads(binascii.a2b_hex(lic_pkl.load_seq.encode()).decode())
+        decrypted_licence = decrypt(licence['pubkey'].encode(), aes_key)
         return (licence['expire_date'],
                 licence['expire_in'],
                 decrypted_licence.decode())
@@ -150,21 +166,21 @@ def get_loaded_privkey():
         logger.critical('Licence is not exist!')
         return False
     else:
-        licence = lic_pkl.load_seq
-        return rsa.PrivateKey.load_pkcs1(decrypt(licence['privkey'].decode(), aes_key))
+        licence = json.loads(binascii.a2b_hex(lic_pkl.load_seq.encode()).decode())
+        return rsa.PrivateKey.load_pkcs1(decrypt(licence['privkey'], aes_key))
 
 
 def gen_rsa():
     lic_pkl = Seq('licence.pkl')
     if lic_pkl.init:
-        lic_pkl.update_seq(init_licence('0'))
+        lic_pkl.update_seq(binascii.b2a_hex(init_licence('0').encode()).decode())
         return False
     else:
         (pubkey, privkey) = rsa.newkeys(1024)
-        licence = lic_pkl.load_seq
+        licence = json.loads(binascii.a2b_hex(lic_pkl.load_seq.encode()).decode())
         licence['pubkey'] = pubkey.save_pkcs1().decode()
         licence['privkey'] = privkey.save_pkcs1().decode()
-        lic_pkl.update_seq(licence)
+        lic_pkl.update_seq(binascii.b2a_hex(json.dumps(licence).encode()).decode())
         return True
 
 
