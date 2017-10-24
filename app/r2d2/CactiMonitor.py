@@ -10,10 +10,18 @@ def cacti_db_monitor(db_info=None):
     host_offline = getdata.get_result(query='host_offline', catalog=catalog)
 
     alarm_content = []
+
     for info in host_offline:
-        alarm_content.append('id: ' + str(info['id']) + ' ' + info['description'] +
-                             ' 于 ' + info['status_fail_date'].strftime('\'%Y-%m-%d %H:%M:%S\'') + ' 离线' +
-                             ', IP: ' + info['hostname'] + '\n\n')
+        # 解决部分Cacti表中无法取到status_fail_date的问题
+        try:
+            offline_time = ' 于 ' + info['status_fail_date'].strftime('\'%Y-%m-%d %H:%M:%S\'')
+        except Exception as e:
+            logger.error('未取得status_fail_date {} error: {}'.format(info['status_fail_date'], e))
+            offline_time = ' '
+
+        alarm_content.append(
+            'id: ' + str(info['id']) + ' ' + info['description'] + offline_time + ' 离线' + ', IP: ' + info[
+                'hostname'] + '\n\n')
 
     catalog2 = ('id', 'name', 'thold_hi', 'thold_low', 'thold_alert', 'host_id', 'graph_id', 'rra_id')
     thold_alert = getdata.get_result(query='thold_alert', catalog=catalog2)
