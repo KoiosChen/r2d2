@@ -13,6 +13,8 @@ class Config:
     SESSION_USE_SIGNER = True
 
     SQLALCHEMY_POOL_SIZE = 1000
+    SQLALCHEMY_POOL_RECYCLE = 1800
+    SQLALCHEMY_MAX_OVERFLOW = 100
     FLASKY_ADMIN = 'peter.chen@mbqianbao.com'
 
     # FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
@@ -43,7 +45,7 @@ class TestingConfig(Config):
 
         {
             'id': 'ups',
-            'func': 'app.R2D2:ups_monitor',
+            'func': 'app.r2d2.UpsMonitor:ups_monitor',
             'args': (),
             'trigger': 'interval',
             'seconds': 300,
@@ -51,15 +53,15 @@ class TestingConfig(Config):
 
         {
             'id': 'cacti',
-            'func': 'app.R2D2:cacti_db_monitor',
+            'func': 'app.r2d2.CactiMonitor:cacti_db_monitor',
             'args': (),
             'trigger': 'interval',
             'seconds': 300,
         },
 
         {
-            'id': 'syslog_without_olt',
-            'func': 'app.R2D2:syslog_monitor',
+            'id': 'polling',
+            'func': 'app.r2d2.ScheduleWorker:unalarmed_polling',
             'args': (),
             'trigger': 'interval',
             'seconds': 300,

@@ -327,8 +327,6 @@ def upload():
 
 
 @main.route("/show_image/<string:filename>", methods=['GET'])
-@login_required
-@permission_required(Permission.NETWORK_MANAGER)
 def show_image(filename):
     return render_template('show_image.html',
                            filename=filename)
@@ -719,7 +717,7 @@ def syslog_search():
                     for syslog in Syslog.query.filter(Syslog.device_ip.like(device_ip),
                                                       Syslog.logmsg.like(logmsg),
                                                       Syslog.logtime.between(start_time, stop_time),
-                                                      Syslog.serverty.like(serverty)).offset(page_start).limit(length)]
+                                                      Syslog.serverty.like(serverty)).order_by(Syslog.logtime.desc()).offset(page_start).limit(length)]
             recordsTotal = Syslog.query.filter(Syslog.device_ip.like(device_ip),
                                                Syslog.logmsg.like(logmsg),
                                                Syslog.logtime.between(start_time, stop_time),
@@ -731,7 +729,7 @@ def syslog_search():
                      syslog.logmsg,
                      syslog.serverty,
                      syslog.logtime]
-                    for syslog in Syslog.query.offset(page_start).limit(length)]
+                    for syslog in Syslog.query.order_by(Syslog.logtime.desc()).offset(page_start).limit(length)]
             recordsTotal = Syslog.query.count()
 
         rest = {'draw': int(draw),
@@ -811,9 +809,10 @@ def update_licence():
 
 
 @main.route('/modify_scheduler_server', methods=['POST'])
-@login_required
-@permission_required(Permission.ADMINISTER)
 def modify_scheduler_server():
+    PermissionIP = ['127.0.0.1']
+    if request.headers.get('X-Forwarded-For', request.remote_addr) not in PermissionIP:
+        return jsonify(json.dumps({'status': 'Permission deny'}))
     logger.info('User {} is modifying scheduler configuration'.format(session['LOGINNAME']))
     params = request.get_data()
     jl = params.decode('utf-8')
@@ -1039,7 +1038,7 @@ def userinfo_update():
     phone_number = request.form.get('phone_number')
 
     logger.info('User {} is update {}\'s info'.format(session['LOGINNAME'], id))
-    logger.debug(password)
+    logger.degug('{password} {username} {area} {role} {duty} {id} {phone_number}'.format_map(vars()))
     if id == session.get('SELFID') or Role.query.filter_by(id=session['ROLE']).first().permissions >= 127:
         userinfo_tobe_changed = User.query.filter_by(id=id).first()
 

@@ -8,11 +8,11 @@ from email.encoders import _bencode
 
 class sendmail:
     def __init__(self, **kwargs):
-        self.HOST = kwargs.setdefault('host', "mail.mbqianbao.com")
+        self.HOST = kwargs.setdefault('host', "smtp.yeah.net")
         self.SUBJECT = kwargs.setdefault('subject', "report")
         self.TO = kwargs.setdefault('mail_to', "455789138@qq.com")
-        self.FROM = kwargs.setdefault('mail_from', "noreply@mbqianbao.com")
-        self.PASSWD = kwargs.setdefault('mail_passwd', "Thr-Tc9-qrf-zP5")
+        self.FROM = kwargs.setdefault('mail_from', "shfk_noreply@yeah.net")
+        self.PASSWD = kwargs.setdefault('mail_passwd', "shfkwg1221")
 
     def addimg(self, src, imgid):
         with open(src, 'rb') as fp:

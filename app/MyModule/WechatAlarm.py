@@ -20,6 +20,7 @@ class WechatAlarm:
         variable['corpid'] = tmp['corpid']
         variable['corpsecret'] = tmp['corpsecret']
         self.expire_time = int(tmp['expire_time'])  # seconds
+        self.default_agentid = tmp['default_agentid']
         self.get_token_url = 'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=%s&corpsecret=%s'
         self.send_sms_url = 'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=%s'
         self.headers = {'Content-Type': 'application/json', "encoding": "utf-8"}
@@ -52,7 +53,7 @@ class WechatAlarm:
             print('Get access token fail')
             return False
 
-    def init_text(self, content):
+    def init_text(self, content, agentid=None):
         content = content
         print(content)
         send_content = {
@@ -60,7 +61,7 @@ class WechatAlarm:
             "toparty": "",
             "totag": "",
             "msgtype": "text",
-            "agentid": "2",
+            "agentid": self.default_agentid if agentid is None else agentid,
             "text": {
                 "content": content
             },
@@ -79,7 +80,7 @@ class WechatAlarm:
             "toparty": "",
             "totag": "",
             "msgtype": "news",
-            "agentid": "2",
+            "agentid": self.default_agentid if not kwargs.get('agentid') else kwargs.get('agentid'),
             "news": {
                 "articles": [
                     {

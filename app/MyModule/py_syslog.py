@@ -69,10 +69,11 @@ class StartThread(threading.Thread):
             syslog_msg = syslog_msg.decode()
             host = addr[0]
             try:
+                logger.debug("{} {} {} {}".format(host, type(host), syslog_msg, type(syslog_msg)))
                 logger.debug("ip:{} msg:{}".format(host, syslog_msg))
                 syslog_allocating(host, syslog_msg)
             except Exception as e:
-                logger.debug('thread %s' % e)
+                logger.error(e)
                 sys.exit(1)
 
             db.session.expire_all()
