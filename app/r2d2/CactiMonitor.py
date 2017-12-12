@@ -31,6 +31,8 @@ def cacti_db_monitor(db_info=None):
                                             graph_id=alert['graph_id'],
                                             rra_id='5',
                                             db_info=db_info)
+        # 解决图片取不到抛异常造成基础告警无法发出
+        pic_url = pic_url if pic_url else ''
         alarm_content.append('id: ' + str(alert['id']) +
                              ' ' + alert['name'] +
                              '产生阀值告警。\n>>>图片链接:' + pic_url + '\n\n')
@@ -43,5 +45,7 @@ def cacti_db_monitor(db_info=None):
     else:
         logger.info('There is no host offline or thold alert')
 
+    getdata.close_cursor()
+    getdata.close_db()
     db.session.expire_all()
     db.session.close()

@@ -53,7 +53,7 @@ class sendmail:
         msg['To'] = self.TO
         msg["Accept-Language"] = "zh-CN"
         msg["Accept-Charset"] = "ISO-8859-1,utf-8,gb2312"
-        server = smtplib.SMTP()
+        server = smtplib.SMTP(timeout=30)
         server.connect(self.HOST, "25")
         server.login(self.FROM, self.PASSWD)
         send_msg = msg.as_string()

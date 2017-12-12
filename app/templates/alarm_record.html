@@ -45,6 +45,7 @@
             <th>告警时间</th>
             <th>详情</th>
             <th>处理</th>
+            <th>删除</th>
         </tr>
         </thead>
         <tbody style="color:sienna;font-size:80%" id="alarm_content_body">
@@ -278,6 +279,35 @@
                 }
             }
         });
+
+        function HTMerDel(alarm_id)
+        {
+            if(confirm("确定要删除该信息吗？删除将不能恢复！")) {
+                $.ajax({
+                type: "post",
+                url: "delete_alarm_record",
+                data: JSON.stringify({"alarm_id": alarm_id}, null, '\t'),
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+
+                success: function (msg) {
+                    if (msg['status']==='OK') {
+                        table1.draw(false);
+                        toastr.success(msg['content']);
+                    }
+                    else {
+                        toastr.warning(msg['content']);
+                    }
+                },
+                error: function (xhr, msg, e) {
+                    alert('error!!')
+                }
+            });
+            }
+            else {
+                return false
+            }
+        }
 
         //提交更改
         function update() {

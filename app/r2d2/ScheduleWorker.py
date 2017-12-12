@@ -124,6 +124,9 @@ def lots_ont_losi_alarm(start_time, end_time):
     else:
         logger.info('There is no alarm')
 
+    db.session.expire_all()
+    db.session.close()
+
 
 def per_ont_losi_alarm(start_time, end_time, alarm_times=100):
     """
@@ -175,6 +178,8 @@ def per_ont_losi_alarm(start_time, end_time, alarm_times=100):
     content = '\n'.join(alarm_list)
     msg = SM.addMsgText(content, 'plain', 'GBK')
     SM.send(addmsgtext=msg)
+    db.session.expire_all()
+    db.session.close()
 
 
 def pon_state_check():

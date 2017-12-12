@@ -29,6 +29,8 @@ def write_syslog_to_db(host, logmsg):
                            serverty=syslog_serverty[serverty])
         db.session.add(write_log)
         db.session.commit()
+        db.session.expire_all()
+        db.session.close()
 
 
 def syslog_allocating(host, logmsg):

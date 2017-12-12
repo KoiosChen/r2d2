@@ -50,6 +50,7 @@ def analysis_resp(**kwargs):
 
 
 def send_wechat(content):
+    logger.info('send a wechat message')
     wechat = WechatAlarm.WechatAlarm()
     c = wechat.init_text(content)
     wechat.sendMsg(c)

@@ -111,14 +111,18 @@ def index():
                                                              border="0" /></a>""",
                          """<a data-toggle="modal" data-target="#update" onclick="editInfo(""" + str(ui.id) + """)">
                                              <img src="../static/edit.png" alt="" title=""
-                                             border="0" /></a>"""]
+                                             border="0" /></a>""",
+                         """<a  onClick="return HTMerDel(""" + str(ui.id) + """)">
+                                                  <img src="../static/trash.png" alt="" title="" border="0" /></a>"""]
                         for ui in AlarmRecord.query.filter(AlarmRecord.content.like(search_content),
+                                                           AlarmRecord.alarm_type.__ne__(999),
                                                            AlarmRecord.create_time.between(start_time,
                                                                                            stop_time)).order_by(
                         AlarmRecord.create_time.desc()).all()
                         if ui.id in post_info and post_info[ui.id]['author_id'] == int(latest_editor)]
 
             elif request.form.get('latest_editor') and not Post.query.filter_by(author_id=latest_editor).all():
+                # 防止异常
                 data = []
 
             else:
@@ -135,8 +139,11 @@ def index():
                                                                              border="0" /></a>""",
                          """<a data-toggle="modal" data-target="#update" onclick="editInfo(""" + str(ui.id) + """)">
                                                              <img src="../static/edit.png" alt="" title=""
-                                                             border="0" /></a>"""]
+                                                             border="0" /></a>""",
+                         """<a  onClick="return HTMerDel(""" + str(ui.id) + """)">
+                                                  <img src="../static/trash.png" alt="" title="" border="0" /></a>"""]
                         for ui in AlarmRecord.query.filter(AlarmRecord.content.like(search_content),
+                                                           AlarmRecord.alarm_type.__ne__(999),
                                                            AlarmRecord.create_time.between(start_time,
                                                                                            stop_time)).order_by(
                         AlarmRecord.create_time.desc()).all()]
@@ -156,8 +163,11 @@ def index():
                                                                          border="0" /></a>""",
                      """<a data-toggle="modal" data-target="#update" onclick="editInfo(""" + str(ui.id) + """)">
                              <img src="../static/edit.png" alt="" title=""
-                             border="0" /></a>"""]
-                    for ui in AlarmRecord.query.order_by(AlarmRecord.create_time.desc()).all()]
+                             border="0" /></a>""",
+                     """<a  onClick="return HTMerDel(""" + str(ui.id) + """)">
+                                                  <img src="../static/trash.png" alt="" title="" border="0" /></a>"""]
+                    for ui in AlarmRecord.query.filter(AlarmRecord.alarm_type.__ne__(999)).order_by(
+                    AlarmRecord.create_time.desc()).all()]
             recordsTotal = AlarmRecord.query.count()
 
         rest = {'draw': int(draw),
@@ -717,7 +727,8 @@ def syslog_search():
                     for syslog in Syslog.query.filter(Syslog.device_ip.like(device_ip),
                                                       Syslog.logmsg.like(logmsg),
                                                       Syslog.logtime.between(start_time, stop_time),
-                                                      Syslog.serverty.like(serverty)).order_by(Syslog.logtime.desc()).offset(page_start).limit(length)]
+                                                      Syslog.serverty.like(serverty)).order_by(
+                    Syslog.logtime.desc()).offset(page_start).limit(length)]
             recordsTotal = Syslog.query.filter(Syslog.device_ip.like(device_ip),
                                                Syslog.logmsg.like(logmsg),
                                                Syslog.logtime.between(start_time, stop_time),
@@ -817,7 +828,6 @@ def modify_scheduler_server():
     params = request.get_data()
     jl = params.decode('utf-8')
     j = json.loads(jl)
-    print(j)
 
     scheduler_id = j.get('scheduler_id')
     interval = float(j.get('interval').strip())
@@ -1038,7 +1048,7 @@ def userinfo_update():
     phone_number = request.form.get('phone_number')
 
     logger.info('User {} is update {}\'s info'.format(session['LOGINNAME'], id))
-    logger.degug('{password} {username} {area} {role} {duty} {id} {phone_number}'.format_map(vars()))
+    logger.debug('{password} {username} {area} {role} {duty} {id} {phone_number}'.format_map(vars()))
     if id == session.get('SELFID') or Role.query.filter_by(id=session['ROLE']).first().permissions >= 127:
         userinfo_tobe_changed = User.query.filter_by(id=id).first()
 

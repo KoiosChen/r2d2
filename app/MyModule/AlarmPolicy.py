@@ -121,6 +121,8 @@ def alarm(**kwargs):
                      }
 
         # phone_call(**call_info)
+    db.session.expire_all()
+    db.session.close()
     return True
 
 
