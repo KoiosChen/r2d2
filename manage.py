@@ -6,6 +6,7 @@ from flask_script import Manager
 from flask_migrate import Migrate
 from app.MyModule import py_syslog
 from app.MyModule import SeqPickle, SchedulerControl
+from app.MyModule import AllocateQueueWork
 
 __author__ = 'Koios'
 
@@ -17,6 +18,9 @@ migrate = Migrate(app, db)
 syslog_process = multiprocessing.Process(target=py_syslog.py_syslog)
 syslog_process.daemon = True
 syslog_process.start()
+
+# 启动调度程序
+AllocateQueueWork.allocate_worker(thread_num=10)
 
 
 # 检查许可, 如果传入的参数为'1', 则用户若删除licence.pkl文件, 每次重启服务都会产生一个新的licence.pkl文件, 并可以使用7天

@@ -11,6 +11,8 @@ from flask_pagedown import PageDown
 import logging
 import redis
 from collections import defaultdict
+from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
+import queue
 
 
 def nesteddict():
@@ -34,6 +36,9 @@ sess = Session()
 pagedown = PageDown()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
+
+# 用于处理订单建议书的队列
+work_q = queue.Queue(maxsize=100)
 
 
 logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %H:%M:%S')

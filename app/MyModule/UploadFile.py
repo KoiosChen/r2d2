@@ -2,16 +2,18 @@ import os
 
 
 class uploadfile():
-    def __init__(self, name, type=None, size=None, not_allowed_msg=''):
+    def __init__(self, name, type=None, size=None, not_allowed_msg='', service_url='', order_status=''):
         self.name = name
         self.type = type
         self.size = size
         self.not_allowed_msg = not_allowed_msg
-        self.url = "data/%s" % name
-        self.import_url = "import_duty/%s" % name
-        self.thumbnail_url = "thumbnail/%s" % name
-        self.delete_url = "delete/%s" % name
+        self.url = "data" + service_url + "/%s" % name
+        self.import_url = "import_duty" + service_url + "/%s" % name
+        self.thumbnail_url = "thumbnail" + service_url + "/%s" % name
+        self.delete_url = "delete" + service_url + "/%s" % name
         self.delete_type = "DELETE"
+        self.id = name.replace('.', '')
+        self.order_status = order_status
 
     def is_image(self):
         fileName, fileExtension = os.path.splitext(self.name.lower())
@@ -21,6 +23,9 @@ class uploadfile():
 
         return False
 
+    def pcap_finished(self):
+        pass
+
     def get_file(self):
         if self.type is not None:
             # POST an image
@@ -28,7 +33,8 @@ class uploadfile():
                 return {"name": self.name,
                         "type": self.type,
                         "size": self.size, 
-                        "url": self.url, 
+                        "url": self.url,
+                        "id": self.id,
                         "thumbnailUrl": self.thumbnail_url,
                         "deleteUrl": self.delete_url, 
                         "deleteType": self.delete_type,}
@@ -38,9 +44,11 @@ class uploadfile():
                 return {"name": self.name,
                         "type": self.type,
                         "size": self.size, 
-                        "url": self.url, 
+                        "url": self.url,
+                        "id": self.id,
                         "deleteUrl": self.delete_url,
                         "importUrl": self.import_url,
+                        "order_status": self.order_status,
                         "deleteType": self.delete_type,}
 
             # File type is not allowed
@@ -54,7 +62,8 @@ class uploadfile():
         elif self.is_image():
             return {"name": self.name,
                     "size": self.size, 
-                    "url": self.url, 
+                    "url": self.url,
+                    "id": self.id,
                     "thumbnailUrl": self.thumbnail_url,
                     "deleteUrl": self.delete_url, 
                     "deleteType": self.delete_type,}
@@ -63,7 +72,9 @@ class uploadfile():
         else:
             return {"name": self.name,
                     "size": self.size, 
-                    "url": self.url, 
+                    "url": self.url,
+                    "id": self.id,
                     "deleteUrl": self.delete_url,
                     "importUrl": self.import_url,
+                    "order_status": self.order_status,
                     "deleteType": self.delete_type,}

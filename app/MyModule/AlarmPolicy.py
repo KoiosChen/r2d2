@@ -25,7 +25,8 @@ def alarm(**kwargs):
     alarm_not_fixed = ''
     record = []
     not_fixed_record = []
-    call_group = HashContent.md5_content(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) + str(random.randint(1, 20)))
+    call_group = HashContent.md5_content(
+        time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) + str(random.randint(1, 20)))
     call_interval = datetime.timedelta(minutes=api_config.get('call_interval') or 480)
     call_again = datetime.timedelta(minutes=api_config.get('call_again') or 60)
 
@@ -34,11 +35,14 @@ def alarm(**kwargs):
         logger.debug('Alarm  content {}'.format(alarm))
         logger.debug('The md5 is : {}'.format(content_md5))
 
-        find_md5 = db.session.query(AlarmRecord).filter_by(content_md5=content_md5).order_by(AlarmRecord.id.desc()).first()
+        # find_md5 = db.session.query(AlarmRecord).filter_by(content_md5=content_md5).order_by(AlarmRecord.id.desc()).first()
+        find_md5 = AlarmRecord.query.filter(AlarmRecord.content_md5.__eq__(content_md5),
+                                            AlarmRecord.alarm_type.__ne__('999')).order_by(
+            AlarmRecord.id.desc()).first()
 
         if find_md5:
             logger.debug('{} {}'.format(find_md5.id, find_md5.content_md5))
-            end_num = int(call_interval/call_again)
+            end_num = int(call_interval / call_again)
             # seqnum = SeqPickle.Seq('tmp/' + find_md5.content_md5 + '.pkl')
             seqnum = SeqPickle.Seq(find_md5.content_md5)
             start_num = int(seqnum.last_seq) + 1
@@ -72,7 +76,7 @@ def alarm(**kwargs):
             db.session.commit()
 
         elif (find_md5 and find_md5.state == 9) \
-                and int(((datetime.datetime.now() - find_md5.create_time)/call_again)) in range(start_num, end_num):
+                and int(((datetime.datetime.now() - find_md5.create_time) / call_again)) in range(start_num, end_num):
             logger.info('The alarm has been confirmed, '
                         'but not be solved, '
                         'call again to the engineer who answered the phone just now')
@@ -136,12 +140,12 @@ def alarmMonitor():
 
     # 查找未接听或未拨打成功的的告警
     alarm_record = AlarmRecord.query.filter(and_(AlarmRecord.state.__ne__(9), AlarmRecord.state.__ne__(8)),
-                                            AlarmRecord.calledTimes.__lt__(max_called_times)).\
-        order_by(AlarmRecord.create_time.desc()).\
+                                            AlarmRecord.calledTimes.__lt__(max_called_times)). \
+        order_by(AlarmRecord.create_time.desc()). \
         all()
 
     # 将未接听次数大于 max_called_times 的告警记录状态设为8
-    not_answered_alarm_record = AlarmRecord.query.\
+    not_answered_alarm_record = AlarmRecord.query. \
         filter(and_(AlarmRecord.state.__ne__(9), AlarmRecord.state.__ne__(8)),
                AlarmRecord.calledTimes.__ge__(max_called_times)).all()
 
@@ -184,7 +188,7 @@ def alarmMonitor():
             logger.info('There is only one call group {}, and has a callid {}'.
                         format(call_group_set, alarm_record[0].lastCallId))
 
-            call_record_by_group = CallRecordDetail.query.filter_by(call_group=alarm_record[0].call_group).\
+            call_record_by_group = CallRecordDetail.query.filter_by(call_group=alarm_record[0].call_group). \
                 order_by(CallRecordDetail.id.desc()).all()
 
             for crgb in call_record_by_group:

@@ -182,7 +182,12 @@ def print_duty_schedule(**kwargs):
     check_year = kwargs.get('check_year') or date.today().year
     this_month_begin = date(check_year, check_month, 1)
     d = this_month_begin
-    this_month_end = date(check_year, check_month + 1, 1) - timedelta(days=1)
+    if check_month == 12:
+        check_year += 1
+        next_month = 1
+    else:
+        next_month = check_month + 1
+    this_month_end = date(check_year, next_month, 1) - timedelta(days=1)
 
     users = {u.id: {'username': u.username, 'phoneNum': u.phoneNum} for u in User.query.all()}
 

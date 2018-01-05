@@ -6,6 +6,7 @@ from wtforms import StringField, SubmitField, PasswordField, SelectField, Select
 from flask_pagedown.fields import PageDownField
 from ..models import Role, Area, JobDescription
 from ..my_func import get_machine_room_by_area, get_device_name
+from flask_wtf.file import FileField, FileAllowed, FileRequired
 
 
 class BaseForm(Form):
@@ -75,8 +76,8 @@ class AreaConfigForm(Form):
 class ManualSync(Form):
     device_name = SelectMultipleField(label='请选择OLT设备:')
     sync_action = RadioField(label='请选择同步内容:', choices=[('1', '同步CEVLAN'), ('2', '同步SERVICE PORT'),
-                                                         ('3', '同步ONU基础信息'), ('4', '同步ONU光衰及下线原因'),
-                                                         ('5', 'MAC LEARNED BY ONU')])
+                                                        ('3', '同步ONU基础信息'), ('4', '同步ONU光衰及下线原因'),
+                                                        ('5', 'MAC LEARNED BY ONU')])
     submit = SubmitField('开始同步')
 
     def __init__(self):
@@ -121,11 +122,7 @@ class PostForm(Form):
     body = PageDownField('故障说明', validators=[DataRequired()])
 
 
-
-
-
-
-
-
-
-
+class UploadForm(Form):
+    file = FileField('选择文件上传（pcap, pcapng）',
+                     validators=[FileAllowed(['pcap', 'pcapng'], '只能上传抓包文件'), FileRequired('文件未选择')])
+    submit = SubmitField('上传')

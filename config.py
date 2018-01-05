@@ -17,6 +17,8 @@ class Config:
     SQLALCHEMY_MAX_OVERFLOW = 100
     FLASKY_ADMIN = 'peter.chen@mbqianbao.com'
 
+    UPLOADED_FILES_DEST = '/Users/Peter/Desktop/uploads'
+
     # FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
 
     @staticmethod
@@ -81,7 +83,7 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     DB_USERNAME = os.environ.get('DATABASE_USERNAME') or 'peter'
-    DB_PASSWORD = os.environ.get('DATABASE_PASSWORD') or 'ftp123buzhidao'
+    DB_PASSWORD = os.environ.get('DATABASE_PASSWORD') or '123123'
     DB_HOST = os.environ.get('DATABASE_HOST') or '127.0.0.1'
     DB_DATABASE = os.environ.get('DATABASE_DATABASE') or 'r2d2'
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://' + DB_USERNAME + ':' + DB_PASSWORD + '@' + DB_HOST + '/' + DB_DATABASE

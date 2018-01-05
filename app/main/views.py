@@ -35,13 +35,13 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def gen_file_name(filename):
+def gen_file_name(filename, path=UPLOAD_FOLDER):
     """
     If file was exist already, rename it and return a new name
     """
 
     i = 1
-    while os.path.exists(os.path.join(UPLOAD_FOLDER, filename)):
+    while os.path.exists(os.path.join(path, filename)):
         name, extension = os.path.splitext(filename)
         filename = '%s_%s%s' % (name, str(i), extension)
         i += 1
@@ -285,10 +285,10 @@ def print_duty_schedule_api():
     return jsonify(json.dumps(posted_body, ensure_ascii=False))
 
 
-@main.route('/upload', methods=['GET', 'POST'])
+@main.route('/upload_duty', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.ADMINISTER)
-def upload():
+def upload_duty():
     logger.info('User {} is uploading duty schedule'.format(session['LOGINNAME']))
 
     if request.method == 'POST':

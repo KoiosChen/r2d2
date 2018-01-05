@@ -397,6 +397,10 @@ class OntAccountInfo(db.Model):
     hash_id = db.Column(db.String(256), nullable=False)
     account_info = db.Column(db.String(256))
 
+"""
+class PiRegister(db.Model):
+    __tablename__ = 'pi_register'
+"""
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
@@ -426,7 +430,7 @@ duty_schedule_status = {1: '正常',
                         6: '管理员删除',
                         7: '新增'}
 
-ALLOWED_EXTENSIONS = set(['xlsx', 'xls'])
+ALLOWED_EXTENSIONS = set(['xlsx', 'xls','pcap', 'pcapng'])
 
 syslog_serverty = {0: "emergency",
                    1: "alert",

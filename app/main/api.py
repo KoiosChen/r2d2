@@ -8,6 +8,13 @@ import re
 from flask_login import current_user
 
 
+@main.route('/pi_register', methods=["POST"])
+def pi_register():
+    sysid = request.json()
+    if not sysid:
+        return jsonify({'status': 'fail', 'content': 'sysid 不存在'})
+
+
 @main.route('/delete_alarm_record', methods=['POST'])
 def delete_alarm_record():
     """
@@ -34,12 +41,15 @@ def delete_alarm_record():
         print(alarm_record)
         print(alarm_record.alarm_type)
 
-        if alarm_record.alarm_type == 4:
+        if alarm_record.alarm_type == 4 or alarm_record.alarm_type == 3:
             print(alarm_record.content)
-            ontid = [int(i) for i in eval(re.findall(r'(\{*.+\})', alarm_record.content)[0])]
+            try:
+                ontid = [int(i) for i in eval(re.findall(r'(\{*.+\})', alarm_record.content)[0])]
+            except Exception as e:
+                ontid = ['PON']
             ip = re.findall(r'(\d+\.\d+\.\d+\.\d+)', alarm_record.content)[0]
             f, s, p = re.findall(r'(\d+/\d+/\d+)', alarm_record.content)[0].split('/')
-            print(f,s,p,ontid,ip)
+            print(f, s, p, ontid, ip)
             for ont in ontid:
                 pon_alarm_record = PonAlarmRecord.query.filter_by(ip=ip, frame=f, slot=s, port=p, ontid=ont).first()
                 if not pon_alarm_record:
