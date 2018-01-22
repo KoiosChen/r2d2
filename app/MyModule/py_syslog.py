@@ -33,11 +33,7 @@ def write_syslog_to_db(host, logmsg):
         db.session.close()
 
 
-def syslog_allocating(host, logmsg):
-
-    syslog_alarm_config = [(c.alarm_keyword, c.alarm_type) for c in
-                           SyslogAlarmConfig.query.filter_by(alarm_status=1).order_by(
-                               SyslogAlarmConfig.alarm_level).all()]
+def syslog_allocating(host, logmsg, syslog_alarm_config):
     match_flag = False
     for key, alarm_type in syslog_alarm_config:
         regex_ = re.compile(key)
@@ -64,6 +60,10 @@ class StartThread(threading.Thread):
     def __init__(self, q):
         threading.Thread.__init__(self)
         self.queue = q
+        # 临时放到global的位置，后续要考虑动态刷新的问题
+        self.syslog_alarm_config = [(c.alarm_keyword, c.alarm_type) for c in
+                                    SyslogAlarmConfig.query.filter_by(alarm_status=1).order_by(
+                                        SyslogAlarmConfig.alarm_level).all()]
 
     def run(self):
         while True:
@@ -73,7 +73,7 @@ class StartThread(threading.Thread):
             try:
                 logger.debug("{} {} {} {}".format(host, type(host), syslog_msg, type(syslog_msg)))
                 logger.debug("ip:{} msg:{}".format(host, syslog_msg))
-                syslog_allocating(host, syslog_msg)
+                syslog_allocating(host, syslog_msg, self.syslog_alarm_config)
             except Exception as e:
                 logger.error(e)
                 sys.exit(1)
@@ -112,11 +112,12 @@ def py_syslog():
             except Exception as e:
                 logger.warning(e)
                 sys.exit(1)
-        # q.join()
+                # q.join()
 
     except Exception as e:
         logger.warning(e)
         sys.exit(1)
+
 
 if __name__ == '__main__':
     py_syslog()

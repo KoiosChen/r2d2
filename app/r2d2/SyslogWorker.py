@@ -43,9 +43,10 @@ def py_syslog_olt_monitor(host, logmsg):
 
         if pon_history:
             if fail:
+                alarm_interval = datetime.timedelta(minutes=120)
                 pon_history.last_fail_time = alert_time
                 # 如果是PON口fail, 那么在计划任务中会再次检测PON口状态, 因此当写入新的syslog服务时,如果是fail 则status 为-1,
-                # 表示此事失效,但是不确定
+                # 表示此时失效,但是不确定
                 pon_history.status = -1 if ontid == 'PON' else 0
                 pon_history.fail_times += 1
             elif recovery:
@@ -67,6 +68,8 @@ def py_syslog_olt_monitor(host, logmsg):
 
                 db.session.add(pon_new)
         db.session.commit()
+        db.session.expire_all()
+        db.session.close()
     except Exception as e:
         logger.warning("Host {} log msg {} not match".format(host, logmsg))
 

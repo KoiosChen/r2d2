@@ -2,8 +2,8 @@
 import json
 import re
 import time
-from .. import db, logger, redis_db
-from ..MyModule import Snmp, AlarmPolicy
+from .. import db, logger, redis_db, snmp
+from ..MyModule import AlarmPolicy
 from ..models import UpsInfo
 
 
@@ -11,7 +11,6 @@ def ups_monitor():
     ups_status = {'1': 'unknown', '2': '（市电正常）online', '3': '(市电中断)onBattery', '4': 'onBoost', '5': 'sleeping',
                   '6': 'onBypass',
                   '7': 'rebooting', '8': 'standBy', '9': 'onBuck'}
-    ups = Snmp.Snmp()
     ups_info = UpsInfo.query.all()
     alarm_list = []
     for u in ups_info:
@@ -26,13 +25,13 @@ def ups_monitor():
             pre_power_left = None
 
         logger.debug('Getting {} {} snmp info'.format(u.name, u.ip))
-        ups.destHost = u.ip
-        ups.community = u.community
+        snmp.destHost = u.ip
+        snmp.community = u.community
         snmp_result = {}
         for key, oid in json.loads(u.oid_dict).items():
             logger.debug('Get {} {}'.format(key, oid))
-            ups.oid = oid
-            result = ups.query()
+            snmp.oid = oid
+            result = snmp.query()
             try:
                 result_value = re.findall(r'=\s+(\d+)', str(result[0]))[0]
                 logger.debug('Get result {}'.format(result_value))

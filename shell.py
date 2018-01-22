@@ -10,7 +10,7 @@ from app.r2d2.ScheduleWorker import *
 from app.r2d2.UpsMonitor import *
 from app.r2d2.SyslogWorker import *
 from app.MyModule import AlarmPolicy, PhoneNumber, AddDutyMember, OperateDutyArrange, WechatAlarm, GetCactiPic
-from app.MyModule import SendMail, SeqPickle, SchedulerControl, requestVerboseInfo
+from app.MyModule import SendMail, SeqPickle, SchedulerControl, requestVerboseInfo, Snmp, SnmpHW
 
 __author__ = 'Koios'
 
@@ -23,7 +23,7 @@ def make_shell_context():
     return dict(app=app, db=db, User=User, Role=Role, MachineRoom=MachineRoom, Device=Device,
                 cacti=cacti_db_monitor, ups=ups_monitor,
                 polling=unalarmed_polling, pon=pon_state_check, today=pon_alarm_in_time_range,
-                alarm=AlarmPolicy, AlarmRecord=AlarmRecord,
+                alarm=AlarmPolicy, AlarmRecord=AlarmRecord, Snmp=Snmp, SnmpHW=SnmpHW,
                 DutyAttendedTime=DutyAttendedTime, DutySchedule=DutySchedule, PhoneNumber=PhoneNumber,
                 AddDutyMember=AddDutyMember, OperateDutyArrange=OperateDutyArrange, WechatAlarm=WechatAlarm,
                 GetCactiPic=GetCactiPic, ont_alarm_in_time_range=lots_ont_losi_alarm, sendmail=SendMail,

@@ -41,16 +41,50 @@ class MachineRoom(db.Model):
 class Device(db.Model):
     __tablename__ = 'device_list'
     id = db.Column(db.Integer, primary_key=True)
-    device_name = db.Column(db.String(30), unique=True, nullable=False)
-    ip = db.Column(db.String(16), unique=True, nullable=False)
-    login_name = db.Column(db.String(20), nullable=False)
-    login_password = db.Column(db.String(20), nullable=False)
+    device_name = db.Column(db.String(200), unique=True, nullable=False)
+    ip = db.Column(db.String(16), nullable=False)
+    login_name = db.Column(db.String(20))
+    login_password = db.Column(db.String(20))
     machine_room_id = db.Column(db.Integer, db.ForeignKey('machineroom_list.id'))
     enable_password = db.Column(db.String(20), nullable=True)
     status = db.Column(db.Integer, nullable=False, default=1)
+    community = db.Column(db.String(20), index=True)
+    monitor_status = db.Column(db.SmallInteger)
+    monitor_fail_date = db.Column(db.DateTime)
+    monitor_rec_date = db.Column(db.DateTime)
+    mib_model = db.Column(db.SmallInteger)
+    vendor = db.Column(db.String(100))
 
     def __repr__(self):
         return '<device name %r>' % self.device_name
+
+
+class SnmpInterface(db.Model):
+    __tablename__ = 'snmp_interface'
+    id = db.Column(db.Integer, primary_key=True)
+    device_id = db.Column(db.Integer, index=True)
+    snmp_sysname = db.Column(db.String(100))
+    snmp_if_desc = db.Column(db.String(50), index=True)
+    snmp_if_alias = db.Column(db.String(200))
+    snmp_if_physical_status = db.Column(db.SmallInteger)
+    snmp_if_protocal_status = db.Column(db.SmallInteger)
+    snmp_last_down_time = db.Column(db.DateTime)
+    snmp_last_rec_time = db.Column(db.DateTime)
+    snmp_last_in_speed = db.Column(db.Float)
+    snmp_last_out_speed = db.Column(db.Float)
+    data_storage = db.Column(db.String(100), default='redis')
+    data_path = db.Column(db.String(100), default='10')
+    snmp_last_fetch_status = db.Column(db.String(100), default='Success')
+    update_time = db.Column(db.DateTime)
+
+
+class SnmpModels(db.Model):
+    __tablename__ = 'snmp_models'
+    id = db.Column(db.Integer, primary_key=True)
+    vendor = db.Column(db.String(100), index=True)
+    device_type = db.Column(db.String(100))
+    oid_name = db.Column(db.String(50))
+    oid = db.Column(db.String(100))
 
 
 class Role(db.Model):
@@ -392,15 +426,54 @@ class Syslog(db.Model):
 
 
 class OntAccountInfo(db.Model):
+    # 用途改为存放附加告警信息
     __tablename__ = 'ont_account_info'
     id = db.Column(db.Integer, primary_key=True)
     hash_id = db.Column(db.String(256), nullable=False)
     account_info = db.Column(db.String(256))
 
-"""
+
 class PiRegister(db.Model):
     __tablename__ = 'pi_register'
-"""
+    sysid = db.Column(db.String(100), primary_key=True)
+    username = db.Column(db.String(50), index=True, nullable=False)
+    times = db.Column(db.Integer, default=0)
+    last_register_time = db.Column(db.DateTime)
+    status = db.Column(db.SmallInteger)
+
+    def __repr__(self):
+        return '<Pi Register: %r>' % self.sysid
+
+
+class PcapOrder(db.Model):
+    __tablename__ = 'pcap_order'
+    id = db.Column(db.String(128), primary_key=True)
+    account_id = db.Column(db.String(20), index=True, nullable=False)
+    login_name = db.Column(db.String(50), index=True, nullable=False)
+    username = db.Column(db.String(20), index=True, nullable=False)
+    question_description = db.Column(db.String(1024))
+    # status:
+    # 0->this user hasn't bind to a Pi
+    # 1->just created
+    # 2->processing
+    # 3->recapture
+    # 4->order finished
+    status = db.Column(db.SmallInteger, default=1)
+    create_time = db.Column(db.DateTime)
+
+
+class PcapResult(db.Model):
+    __tablename__ = 'pcap_result'
+    id = db.Column(db.String(128), primary_key=True)
+    sysid = db.Column(db.String(100), index=True)
+    pcap_order_id = db.Column(db.String(128), index=True)
+    pcap_filepath = db.Column(db.String(200))
+    r2d2_filepath = db.Column(db.String(200))
+    result_description = db.Column(db.String(1024))
+    speedtest = db.Column(db.String(50))
+    pingtest = db.Column(db.String(100))
+    create_time = db.Column(db.DateTime)
+
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
@@ -422,6 +495,8 @@ alarm_record_state = {1: '呼叫失败',
                       8: '已达最大呼叫次数, 并且未接听',
                       9: '呼叫成功',
                       99: '未呼叫'}
+
+
 duty_schedule_status = {1: '正常',
                         2: '调休',
                         3: '事假',

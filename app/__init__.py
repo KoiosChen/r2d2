@@ -13,6 +13,7 @@ import redis
 from collections import defaultdict
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 import queue
+from app.MyModule import Snmp
 
 
 def nesteddict():
@@ -40,6 +41,7 @@ login_manager.login_view = 'auth.login'
 # 用于处理订单建议书的队列
 work_q = queue.Queue(maxsize=100)
 
+snmp = Snmp.Snmp()
 
 logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %H:%M:%S')
 logger = logging.getLogger()
@@ -49,6 +51,7 @@ formatter = logging.Formatter(fmt='%(asctime)s - %(module)s-%(funcName)s - %(lev
 hdlr.setFormatter(formatter)
 logger.addHandler(hdlr)
 logger.setLevel(logging.DEBUG)
+
 
 
 def create_app(config_name):
