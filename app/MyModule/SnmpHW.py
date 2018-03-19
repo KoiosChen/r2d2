@@ -7,8 +7,11 @@ import threading
 
 mib = {'sysContact': '1.3.6.1.2.1.1.4.0',
        'sysName': '1.3.6.1.2.1.1.5.0',
+       'ifIndex': "1.3.6.1.2.1.2.2.1.1",
        'ifDesc': '1.3.6.1.2.1.2.2.1.2',
-       'ifAlias': '1.3.6.1.2.1.31.1.1.1.18'}
+       'ifAlias': '1.3.6.1.2.1.31.1.1.1.18',
+       'ifSpeed': "1.3.6.1.2.1.2.2.1.5",
+       }
 
 
 def doIfDescAlias():
@@ -33,6 +36,7 @@ class GetHwSnmpInfo(Snmp):
                       community=kwargs.get('community'))
 
     def get_targets(self, db_info=None):
+        # 用于从Cacti的数据库中获取监控目标的community
         db_info = 'Cacti' if db_info is None else db_info
         getdata = GetData.GetData(db_info=db_info)
         getdata.t.cursor.execute('set names latin1')
@@ -59,6 +63,11 @@ class GetHwSnmpInfo(Snmp):
         db.session.commit()
 
     def snmp_interface(self, devices=None):
+        """
+
+        :param devices: 这里的device是一个db的对象，所以传入的一定是Device的对象
+        :return:
+        """
         devices = Device.query.filter(Device.status.__eq__('1'),
                                       Device.community.__ne__(None),
                                       Device.mib_model.__eq__('1')).all() \
@@ -95,12 +104,13 @@ class GetHwSnmpInfo(Snmp):
                     db.session.add(if_record)
                     db.session.commit()
 
-    # def last_bandwidth(self):
-    #     for i, previous in r[0].items():
-    #         if previous and r[1][i]:
-    #             if previous and int(r[1][i]) < int(previous):
-    #                 diff = (int(r[1][i]) + 2 ** 32 - 1 - int(previous)) * 8 / (60 * 1024 * 1024)
-    #             else:
-    #                 diff = (int(r[1][i]) - int(previous)) * 8 / (60 * 1024 * 1024)
-    #             diffDic[i] = diff
+    def last_bandwidth(self):
+
+        for i, previous in r[0].items():
+            if previous and r[1][i]:
+                if previous and int(r[1][i]) < int(previous):
+                    diff = (int(r[1][i]) + 2 ** 32 - 1 - int(previous)) * 8 / (60 * 1024 * 1024)
+                else:
+                    diff = (int(r[1][i]) - int(previous)) * 8 / (60 * 1024 * 1024)
+                diffDic[i] = diff
 

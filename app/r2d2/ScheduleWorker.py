@@ -305,6 +305,9 @@ def pon_state_check():
 
             db.session.add(db_obj)
 
+        # 关闭连接的telnet session， 以免造成文件句柄耗尽
+        t.telnet_close()
+
         db.session.commit()
         db.session.expire_all()
         db.session.close()
@@ -323,8 +326,6 @@ def pon_state_check():
         logger.debug('######### {}'.format(t))
         t.join()
 
-    db.session.expire_all()
-    db.session.close()
     return True
 
 
@@ -343,9 +344,6 @@ def olt_check():
 
     lots_ont_losi_alarm(start_time=start_time, end_time=end_time)
 
-    db.session.expire_all()
-    db.session.close()
-
 
 def per_ont_check():
     """
@@ -358,9 +356,6 @@ def per_ont_check():
 
     per_ont_losi_alarm(start_time=start_time, end_time=end_time)
 
-    db.session.expire_all()
-    db.session.close()
-
 
 def unalarmed_polling():
     """
@@ -368,5 +363,3 @@ def unalarmed_polling():
     :return:
     """
     AlarmPolicy.alarmMonitor()
-    db.session.expire_all()
-    db.session.close()

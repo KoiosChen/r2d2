@@ -14,6 +14,9 @@ class TelnetDevice:
 
         try:
             self.tn = telnetlib.Telnet(host, 23, self.timeout)
+        except Exception as e:
+            logger.error('Error: {}, telnet {} fail'.format(e, host))
+        else:
             self.tn.set_debuglevel(0)
             time.sleep(self.command_interval)
 
@@ -42,9 +45,6 @@ class TelnetDevice:
             self.tn.expect([re.compile(b'\(config\)\#'), ], self.command_timeout)
 
             logger.info('Login device {}'.format(host))
-
-        except Exception as e:
-            logger.error('Error: {}, telnet {} fail'.format(e, host))
 
     def get_result(self, stop, patern1='', patern2=''):
         """

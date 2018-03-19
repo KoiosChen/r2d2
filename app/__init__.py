@@ -14,6 +14,8 @@ from collections import defaultdict
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 import queue
 from app.MyModule import Snmp
+from flask_sqlalchemy import SQLAlchemy as SQLAlchemyBase
+from sqlalchemy.pool import NullPool
 
 
 def nesteddict():
@@ -22,6 +24,13 @@ def nesteddict():
     :return:
     """
     return defaultdict(nesteddict)
+
+
+class SQLAlchemy(SQLAlchemyBase):
+  def apply_driver_hacks(self, app, info, options):
+    super(SQLAlchemy, self).apply_driver_hacks(app, info, options)
+    options['poolclass'] = NullPool
+    options.pop('pool_size', None)
 
 
 # 用于存放监控记录信息，例如UPS前序状态，需要配置持久化
