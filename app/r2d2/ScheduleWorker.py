@@ -207,110 +207,105 @@ def pon_state_check():
             logger.debug('fsp: {} {} {}'.format(pon_obj.frame, pon_obj.slot, pon_obj.port))
             value[(pon_obj.frame, pon_obj.slot, pon_obj.port)] = pon_obj
 
-        device_info = Device.query.filter_by(ip=ip).first()
-        t = Telnet5680T.TelnetDevice(mac='', host=device_info.ip, username=device_info.login_name,
-                                     password=device_info.login_password)
+        try:
+            device_info = Device.query.filter_by(ip=ip).first()
+        except Exception as e:
+            logger.error("Cannot find the ip {} in the device list, error {}".format(ip, str(e)))
+        else:
+            t = Telnet5680T.TelnetDevice(mac='', host=device_info.ip, username=device_info.login_name,
+                                         password=device_info.login_password)
 
-        for fsp, db_obj in value.items():
-            t.go_into_interface_mode('/'.join(fsp))
-            result = t.display_port_state(fsp[2])
+            for fsp, db_obj in value.items():
+                t.go_into_interface_mode('/'.join(fsp))
+                result = t.display_port_state(fsp[2])
 
-            for line in result:
-                if re.search(r'Port state', line):
-                    logger.debug(line)
-                    port_state = re.findall(two_words, line)[0][1]
-                elif re.search(r'Last up time', line):
-                    logger.debug(line)
-                    last_up_time = re.findall(two_words, line)[0][1]
-                elif re.search(r'Last down time', line):
-                    logger.debug(line)
-                    last_down_time = re.findall(two_words, line)[0][1]
+                # 第一步，确认该port状态，获取port状态、最后上线及下线时间
+                for line in result:
+                    if re.search(r'Port state', line):
+                        logger.debug(line)
+                        port_state = re.findall(two_words, line)[0][1]
+                    elif re.search(r'Last up time', line):
+                        logger.debug(line)
+                        last_up_time = re.findall(two_words, line)[0][1]
+                    elif re.search(r'Last down time', line):
+                        logger.debug(line)
+                        last_down_time = re.findall(two_words, line)[0][1]
 
-            try:
-                last_fail_time = re.findall(reg_datetime, last_down_time)[0]
-            except Exception as e:
-                last_fail_time = None
+                try:
+                    last_fail_time = re.findall(reg_datetime, last_down_time)[0]
+                except Exception as e:
+                    last_fail_time = None
 
-            try:
-                last_recovery_time = re.findall(reg_datetime, last_up_time)[0]
-            except Exception as e:
-                last_recovery_time = None
+                try:
+                    last_recovery_time = re.findall(reg_datetime, last_up_time)[0]
+                except Exception as e:
+                    last_recovery_time = None
 
-            logger.debug('last fail time: {}'.format(last_fail_time))
-            logger.debug('last recovery time: {}'.format(last_recovery_time))
+                logger.debug('last fail time: {}'.format(last_fail_time))
+                logger.debug('last recovery time: {}'.format(last_recovery_time))
 
-            if port_state == 'Online':
-                logger.debug('port online')
-                db_obj.status = 1
-            elif port_state == 'Offline':
-                logger.debug('port offline')
+                if port_state == 'Online':
+                    logger.debug('port online')
+                    db_obj.status = 1
+                elif port_state == 'Offline':
+                    """
+                    第二步，如果port是offLine的，那么做如下判断
+                    """
+                    logger.debug('port offline')
 
-                ont_id_list = []
-                for ont in t.display_ont_info(fsp[2]):
-                    if re.search(reg_mac, ont):
-                        logger.debug(ont)
-                        ont_id_list.append(
-                            re.findall(r'(\d+)\s+[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}', ont)[0])
-                ont_count = len(set(ont_id_list))
-                confirm_flag = False
-                if ont_count > 0:
+                    ont_id_list = []
+                    """
+                    获取该port下所有注册的onu的ont id，并写入到ont_id_list中
+                    """
+                    for ont in t.display_ont_info(fsp[2]):
+                        if re.search(reg_mac, ont):
+                            logger.debug(ont)
+                            ont_id_list.append(
+                                re.findall(r'(\d+)\s+[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}', ont)[0])
+                    ont_count = len(set(ont_id_list))
+                    # confirm_flag = False
                     pon_flag = 0
-                    for oid in ont_id_list:
-                        register_info = t.check_register_info(p=str(fsp[2]), id=oid)
-                        logger.debug(register_info)
-                        for line in register_info:
-                            if re.search(r'DownTime', str(line)):
-                                downtime_find = re.findall(reg_datetime, line)
-                                if downtime_find:
-                                    downtime = downtime_find[0]
-                                    logger.debug(str(line))
-                                    ldt = datetime.datetime.strptime(downtime, "%Y-%m-%d %H:%M:%S")
-                                    logger.debug(ldt)
+                    if ont_count > 0:
+                        for oid in ont_id_list:
+                            register_info = t.display_ont_detail_info(p=str(fsp[2]), ontid=oid)
+                            logger.debug(register_info)
+                            ont_last_down_cause, ont_last_down_time = None, None
+                            for line in register_info:
+                                if re.search(r'Last down cause', line):
+                                    logger.debug(line)
+                                    ont_last_down_cause = line.split(':')[1].strip()
+                                elif re.search(r'Last down time', line):
+                                    logger.debug(line)
+                                    try:
+                                        ont_last_down_time = datetime.datetime.strptime(
+                                            re.findall(reg_datetime, line)[0], "%Y-%m-%d %H:%M:%S")
+                                    except Exception as e:
+                                        ont_last_down_time = None
 
-                                    td = datetime.datetime.strptime(last_fail_time, "%Y-%m-%d %H:%M:%S") - ldt
+                                if ont_last_down_cause and ont_last_down_time:
+                                    break
 
-                                    if td <= datetime.timedelta(seconds=0):
-                                        pon_flag += 1
-                                        logger.debug(td)
+                            logger.debug("ont_last_down_cause is {}".format(ont_last_down_cause))
+                            logger.debug("ont_last_down_time is {}".format(str(ont_last_down_time)))
 
-                                    else:
-                                        logger.debug('break')
-                                        break
+                            if ont_last_down_time == datetime.datetime.strptime(last_fail_time,
+                                                                                "%Y-%m-%d %H:%M:%S") \
+                                    and ont_last_down_cause.upper() == 'LOSI':
+                                pon_flag += 1
 
-                            elif re.search(r'DownCause', line):
-                                logger.debug(line)
-                                # 目前不考虑下线原因是掉电的断线原因
+                    db_obj.status = 0 if pon_flag >= 2 else 2
 
-                                if re.search(r'LOS[i|I]', line):
-                                    if pon_flag > 0:
-                                        pon_flag += 1
-                                    logger.debug('LOSi match: {}'.format(line))
-                                else:
-                                    logger.debug('Other cause match: {}'.format(line))
-                                    pon_flag -= 1
+                db_obj.last_fail_time = last_fail_time
+                db_obj.last_recovery_time = last_recovery_time
 
-                            if pon_flag >= 2:
-                                logger.debug('confirm flag = True. pon_flag: {}'.format(pon_flag))
-                                confirm_flag = True
-                                break
+                db.session.add(db_obj)
 
-                        if confirm_flag:
-                            break
+            # 关闭连接的telnet session， 以免造成文件句柄耗尽
+            t.telnet_close()
 
-                logger.debug('final confirm flag is {}'.format(confirm_flag))
-                db_obj.status = 0 if confirm_flag else 2
-
-            db_obj.last_fail_time = last_fail_time
-            db_obj.last_recovery_time = last_recovery_time
-
-            db.session.add(db_obj)
-
-        # 关闭连接的telnet session， 以免造成文件句柄耗尽
-        t.telnet_close()
-
-        db.session.commit()
-        db.session.expire_all()
-        db.session.close()
+            db.session.commit()
+            db.session.expire_all()
+            db.session.close()
 
     # start from here
     pon_check = [pon.ip for pon in PonAlarmRecord.query.filter_by(status=-1, ontid='PON').all()]

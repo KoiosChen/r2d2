@@ -45,7 +45,7 @@ class StartThread(threading.Thread):
 
 def allocate_worker(thread_num=1):
     """
-    用来调度获取建议书任务，线程池默认共5个线程
+    用来处理上传的抓包文件，线程池默认共1个线程
     :return:
     """
 

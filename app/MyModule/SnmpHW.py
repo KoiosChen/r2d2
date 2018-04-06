@@ -18,7 +18,7 @@ def doIfDescAlias():
 
     def _do(_d):
         s = GetHwSnmpInfo()
-        s.snmp_interface(devices=_d)
+        s.match_int_desc(devices=_d)
 
     device = Device.query.filter(Device.status.__eq__('1'),
                                  Device.community.__ne__(None),
@@ -35,8 +35,13 @@ class GetHwSnmpInfo(Snmp):
                       host=kwargs.get('host'),
                       community=kwargs.get('community'))
 
-    def get_targets(self, db_info=None):
-        # 用于从Cacti的数据库中获取监控目标的community
+    def get_device_community(self, db_info=None):
+        """
+        用于从Cacti的数据库中获取监控目标的community
+        :param db_info:
+        :return:
+        """
+
         db_info = 'Cacti' if db_info is None else db_info
         getdata = GetData.GetData(db_info=db_info)
         getdata.t.cursor.execute('set names latin1')
@@ -62,9 +67,9 @@ class GetHwSnmpInfo(Snmp):
             db.session.add(device)
         db.session.commit()
 
-    def snmp_interface(self, devices=None):
+    def match_int_desc(self, devices=None):
         """
-
+        用于对应处制定设备（设备列表）中 interface -- description的对应关系
         :param devices: 这里的device是一个db的对象，所以传入的一定是Device的对象
         :return:
         """
@@ -75,16 +80,18 @@ class GetHwSnmpInfo(Snmp):
         for d in devices:
             self.destHost = d.ip
             self.community = d.community
-            ifDesc = {str(k[0][0]).split('.')[-1]: str(k[0][1]) for k in self.query_bulk(N=0, R=1, oid=mib['ifDesc'])}
+
+            ifDesc = self.snmp_query_bulk_string(mib['ifDesc'])
             if not ifDesc:
                 logger.debug('get interface description fail')
                 continue
-            ifAlias = {str(k[0][0]).split('.')[-1]: str(k[0][1]) for k in self.query_bulk(N=0, R=1, oid=mib['ifAlias'])}
+
+            ifAlias = self.snmp_query_bulk_string(mib['ifAlias'])
             if not ifAlias:
                 logger.debug('get interface alias fail')
                 continue
 
-            sysname = str(self.query(qoid=mib['sysName'])[0][1])
+            sysname = self.snmp_query_string(mib['sysName'])
 
             if_desc_alias = {}
             for i, ifs in ifDesc.items():
@@ -106,9 +113,11 @@ class GetHwSnmpInfo(Snmp):
 
     def last_bandwidth(self):
 
+        r =
+
         for i, previous in r[0].items():
             if previous and r[1][i]:
-                if previous and int(r[1][i]) < int(previous):
+                if int(r[1][i]) < int(previous):
                     diff = (int(r[1][i]) + 2 ** 32 - 1 - int(previous)) * 8 / (60 * 1024 * 1024)
                 else:
                     diff = (int(r[1][i]) - int(previous)) * 8 / (60 * 1024 * 1024)

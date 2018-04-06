@@ -265,6 +265,12 @@ class TelnetDevice:
             return False if re.search(r'Failure', str(line)) else True
 
     def check_register_info(self, p, id):
+        """
+        b'display ont register-info ' + p.encode('utf8') + b' ' + id.encode('utf8') + b'\n'
+        :param p:
+        :param id:
+        :return:
+        """
         print('check register_info')
         self.tn.write(b'display ont register-info ' + p.encode('utf8') + b' ' + id.encode('utf8') + b'\n')
         time.sleep(self.command_interval)

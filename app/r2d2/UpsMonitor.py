@@ -71,5 +71,3 @@ def ups_monitor():
     else:
         logger.info('There is no ups alarm')
 
-    db.session.expire_all()
-    db.session.close()

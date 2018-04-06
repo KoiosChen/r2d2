@@ -47,5 +47,3 @@ def cacti_db_monitor(db_info=None):
 
     getdata.close_cursor()
     getdata.close_db()
-    db.session.expire_all()
-    db.session.close()

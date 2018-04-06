@@ -25,6 +25,9 @@ class Snmp(object):
             result = None
         return result
 
+    def snmp_query_string(self, _oid):
+        return str(self.query(qoid=_oid)[0][1])
+
     def query_bulk(self, N=0, R=100, oid=None):
         self.oid = self.oid if oid is None else oid
         """Creates SNMP query session"""
@@ -40,3 +43,7 @@ class Snmp(object):
         except Exception as err:
             result = None
         return result
+
+    def snmp_query_bulk_string(self, _oid):
+        return {str(k[0][0]).split('.')[-1]: str(k[0][1]) for k in self.query_bulk(N=0, R=1, oid=_oid)}
+
