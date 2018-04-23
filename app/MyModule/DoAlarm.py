@@ -118,5 +118,7 @@ def phone_call(**kwargs):
             rr.state = 9
             db.session.add(rr)
         db.session.commit()
+        db.session.expire_all()
+        db.session.close()
         logger.warn('There is no phone number to be called in this time {}'.
                     format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())))

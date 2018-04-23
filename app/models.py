@@ -425,6 +425,86 @@ class Syslog(db.Model):
     logtime = db.Column(db.DateTime)
 
 
+class SyslogEmerg(db.Model):
+    __tablename__ = 'syslog_emerg'
+    id = db.Column(db.Integer, primary_key=True)
+    facility = db.Column(db.String(20))
+    serverty = db.Column(db.String(20))
+    device_ip = db.Column(db.String(40))
+    logmsg = db.Column(db.String(600))
+    logtime = db.Column(db.DateTime)
+
+
+class SyslogAlert(db.Model):
+    __tablename__ = 'syslog_alert'
+    id = db.Column(db.Integer, primary_key=True)
+    facility = db.Column(db.String(20))
+    serverty = db.Column(db.String(20))
+    device_ip = db.Column(db.String(40))
+    logmsg = db.Column(db.String(600))
+    logtime = db.Column(db.DateTime)
+
+
+class SyslogCrit(db.Model):
+    __tablename__ = 'syslog_crit'
+    id = db.Column(db.Integer, primary_key=True)
+    facility = db.Column(db.String(20))
+    serverty = db.Column(db.String(20))
+    device_ip = db.Column(db.String(40))
+    logmsg = db.Column(db.String(600))
+    logtime = db.Column(db.DateTime)
+
+
+class SyslogErr(db.Model):
+    __tablename__ = 'syslog_err'
+    id = db.Column(db.Integer, primary_key=True)
+    facility = db.Column(db.String(20))
+    serverty = db.Column(db.String(20))
+    device_ip = db.Column(db.String(40))
+    logmsg = db.Column(db.String(600))
+    logtime = db.Column(db.DateTime)
+
+
+class SyslogWarn(db.Model):
+    __tablename__ = 'syslog_warn'
+    id = db.Column(db.Integer, primary_key=True)
+    facility = db.Column(db.String(20))
+    serverty = db.Column(db.String(20))
+    device_ip = db.Column(db.String(40))
+    logmsg = db.Column(db.String(600))
+    logtime = db.Column(db.DateTime)
+
+
+class SyslogNotice(db.Model):
+    __tablename__ = 'syslog_notice'
+    id = db.Column(db.Integer, primary_key=True)
+    facility = db.Column(db.String(20))
+    serverty = db.Column(db.String(20))
+    device_ip = db.Column(db.String(40))
+    logmsg = db.Column(db.String(600))
+    logtime = db.Column(db.DateTime)
+
+
+class SyslogInfo(db.Model):
+    __tablename__ = 'syslog_info'
+    id = db.Column(db.Integer, primary_key=True)
+    facility = db.Column(db.String(20))
+    serverty = db.Column(db.String(20))
+    device_ip = db.Column(db.String(40))
+    logmsg = db.Column(db.String(600))
+    logtime = db.Column(db.DateTime)
+
+
+class SyslogDebug(db.Model):
+    __tablename__ = 'syslog_debug'
+    id = db.Column(db.Integer, primary_key=True)
+    facility = db.Column(db.String(20))
+    serverty = db.Column(db.String(20))
+    device_ip = db.Column(db.String(40))
+    logmsg = db.Column(db.String(600))
+    logtime = db.Column(db.DateTime)
+
+
 class OntAccountInfo(db.Model):
     # 用途改为存放附加告警信息
     __tablename__ = 'ont_account_info'

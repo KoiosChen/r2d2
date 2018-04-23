@@ -129,6 +129,7 @@
 {% endblock %}
 
 {% block scripts %}
+    {{ super() }}
     <script>
     function modify_scheduler(api_params, interval) {
         var params = '{"scheduler_id":"' + api_params + '","interval":"' + interval + '"}';

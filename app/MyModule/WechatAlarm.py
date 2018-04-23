@@ -7,7 +7,7 @@ import json
 import requests
 import time
 from ..models import TokenRecord
-from .. import db, logger
+from .. import db, logger, redis_db
 import datetime
 from .GetConfig import get_config
 

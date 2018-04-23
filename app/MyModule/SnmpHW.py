@@ -111,15 +111,13 @@ class GetHwSnmpInfo(Snmp):
                     db.session.add(if_record)
                     db.session.commit()
 
-    def last_bandwidth(self):
-
-        r =
-
-        for i, previous in r[0].items():
-            if previous and r[1][i]:
-                if int(r[1][i]) < int(previous):
-                    diff = (int(r[1][i]) + 2 ** 32 - 1 - int(previous)) * 8 / (60 * 1024 * 1024)
-                else:
-                    diff = (int(r[1][i]) - int(previous)) * 8 / (60 * 1024 * 1024)
-                diffDic[i] = diff
+    # def last_bandwidth(self):
+    #
+    #     for i, previous in r[0].items():
+    #         if previous and r[1][i]:
+    #             if int(r[1][i]) < int(previous):
+    #                 diff = (int(r[1][i]) + 2 ** 32 - 1 - int(previous)) * 8 / (60 * 1024 * 1024)
+    #             else:
+    #                 diff = (int(r[1][i]) - int(previous)) * 8 / (60 * 1024 * 1024)
+    #             diffDic[i] = diff
 

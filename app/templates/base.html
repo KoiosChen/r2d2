@@ -1,7 +1,6 @@
 {% extends "bootstrap/base.html" %}
 
 {% block head %}
-    {{ super() }}
     <style>
         .error {
             color: red;
@@ -10,8 +9,8 @@
 
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-    <link href="{{ url_for('static', filename='bootstrap.mini.css' ) }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='style.css' ) }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='bootstrap-datetimepicker.min.css' ) }}" rel="stylesheet" media="screen">
     <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.8.3.min.js') }}"
@@ -36,26 +35,31 @@
 {% block title %}R2D2{% endblock %}
 {% block modal %}{% endblock %}
 {% block navbar %}
-    <div class="navbar navbar-inverse" role="navigation">
+    <nav class="navbar navbar-inverse" role="navigation" id="sidebar-wrapper">
         <div class="container">
-            {% if current_user.is_authenticated %}
+            <div class="container-fluid">
+                {% if current_user.is_authenticated %}
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle"
-                            data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" style="font-size: 16px" href="/">R2D2告警</a>
-                    {% if current_user.is_snoc() %}
-                        <a class="navbar-brand" style="font-size: 16px" href="/syslog_search">SYSLOG</a>
-                        <a class="navbar-brand" style="font-size: 16px" href="/upload_pcap">数据包分析</a>
-                    {% endif %}
+                    <a class="navbar-brand" rel="home" href="#" title="Buy Sell Rent Everyting">Orca
+                    </a>
                 </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li class="dropdown" style="font-size: 16px">
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li {% if request.path == '/' %}class="active"{% endif %}><a href="/">R2D2告警</a></li>
+                        {% if current_user.is_snoc() %}
+                            <li {% if request.path == '/syslog_search' %}class="active"{% endif %}><a
+                                    href="/syslog_search">SYSLOG</a></li>
+                            <li {% if request.path == '/upload_pcap' %}class="active"{% endif %}><a
+                                    href="/upload_pcap">数据包分析</a></li>
+                        {% endif %}
+
+                        <li {% if request.path == '/print_duty_schedule' or request.path == '/upload_duty_schedule' %}class="active dropdown"
+                            {% else %}class="dropdown"{% endif %}>
                             <a class="dropdown-toggle" href="#" data-toggle="dropdown">
                                 <span></span>
                                 值班管理 <strong class="caret"></strong>
@@ -70,42 +74,49 @@
 
                         {% if current_user.is_snoc() %}
 
-                            <li class="dropdown" style="font-size: 16px">
-                            <a class="dropdown-toggle" href="#" data-toggle="dropdown">
-                                <span></span>
+                            <li {% if request.path == '/params_config' or request.path == '/syslog_config' or request.path == '/add_device' or request.path == '/user_register' or request.path == '/local_user_check' or request.path == '/licence_control'%}
+                                    class="active dropdown"
+                                {% else %}class="dropdown"{% endif %}>
+                                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+                                            <span></span>
 
-                                设置 <strong class="caret"></strong>
-                            </a>
-                            <ul class="dropdown-menu">
-                                {% if current_user.is_snoc() %}
-                                    <li><a href="/params_config">参数设置</a></li>
-                                    <li><a href="/syslog_config">SYSLOG设置</a></li>
-                                    <li><a href="/add_device">添加设备</a></li>
-                                    <li><a href="/user_register">添加用户</a></li>
+                                            设置 <strong class="caret"></strong>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            {% if current_user.is_snoc() %}
+                                                <li><a href="/params_config">参数设置</a></li>
+                                                <li><a href="/syslog_config">SYSLOG设置</a></li>
+                                                <li><a href="/add_device">添加设备</a></li>
+                                                <li><a href="/user_register">添加用户</a></li>
+                                            {% endif %}
+
+                                            <li><a href="/local_user_check">本地用户查询</a></li>
+                                            {% if current_user.is_administrator() %}
+                                                <li><a href="/licence_control">许可证管理</a></li>
+                                            {% endif %}
+
+                                        </ul>
+
+                                    </li>
                                 {% endif %}
-
-                                <li><a href="/local_user_check">本地用户查询</a></li>
-                                {% if current_user.is_administrator() %}
-                                    <li><a href="/licence_control">许可证管理</a></li>
+                            <ul class="nav navbar-nav navbar-right">
+                                {% if current_user.is_authenticated %}
+                                    <li><a href="{{ url_for('auth.logout') }}"><span
+                                            class="glyphicon glyphicon-log-in"></span>
+                                        登出</a></li>
+                                {% else %}
+                                    <li><a href="{{ url_for('auth.login') }}"><span
+                                            class="glyphicon glyphicon-log-in"></span>
+                                        登入</a></li>
                                 {% endif %}
-
                             </ul>
+                            </ul>
+                            </div>
                         {% endif %}
-                        </li>
-
-
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        {% if current_user.is_authenticated %}
-                            <li><a href="{{ url_for('auth.logout') }}">Sign Out</a></li>
-                        {% else %}
-                            <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
-                        {% endif %}
-                    </ul>
-                </div>
-            {% endif %}
+            </div>
         </div>
-    </div>
+    </nav>
+
 {% endblock %}
 
 {% block content %}
@@ -124,11 +135,14 @@
     {{ pagedown.include_pagedown() }}
     <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.8.3.min.js') }}"
             charset="UTF-8"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js' ) }}"></script>
     <script type="text/javascript" charset="utf8"
             src="http://cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
 
     <script type="text/javascript">
+        $(".nav a").on("click", function () {
+            $(".nav").find(".active").removeClass("active");
+            $(this).parent().addClass("active");
+        });
     </script>
 {% endblock %}
 

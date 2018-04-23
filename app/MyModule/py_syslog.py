@@ -5,16 +5,17 @@ import threading
 import re
 from ..r2d2.SyslogWorker import py_syslog_olt_monitor, general_syslog_monitor
 from ..models import SyslogAlarmConfig, Syslog, syslog_facility, syslog_serverty
-from .. import db, logger
+from .. import db, logger, redis_db
 import datetime
 
 
 def write_syslog_to_db(host, logmsg):
-    logger.debug('writing syslog to db')
+
     n = logmsg.find('>')
     serverty = int(logmsg[1:n]) & 0x0007
     facility = (int(logmsg[1:n]) & 0x03f8) >> 3
     if serverty <= 3:  # 只记录error - emergency 的syslog
+        logger.debug('writing syslog to db')
         try:
             alert_time = datetime.datetime.strptime(
                 re.findall(r'(\d+-\d+-\d+\s+\d+:\d+:\d+)', logmsg)[0],
@@ -22,11 +23,13 @@ def write_syslog_to_db(host, logmsg):
             )
         except Exception as e:
             alert_time = datetime.datetime.now()
+
         write_log = Syslog(device_ip=host,
                            logmsg=logmsg[26:],
                            logtime=alert_time,
                            facility=syslog_facility[facility],
                            serverty=syslog_serverty[serverty])
+
         db.session.add(write_log)
         db.session.commit()
         db.session.expire_all()
@@ -108,6 +111,12 @@ def py_syslog():
         while 1:
             try:
                 q.put(sock.recvfrom(bufsize))
+                syslog_recv_counter = redis_db.get("syslog_recv_counter").decode()
+
+                if syslog_recv_counter:
+                    redis_db.set('syslog_recv_counter', int(syslog_recv_counter) + 1)
+                else:
+                    redis_db.set('syslog_recv_counter', 1)
 
             except Exception as e:
                 logger.warning(e)

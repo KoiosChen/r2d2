@@ -209,9 +209,7 @@ def pon_state_check():
 
         try:
             device_info = Device.query.filter_by(ip=ip).first()
-        except Exception as e:
-            logger.error("Cannot find the ip {} in the device list, error {}".format(ip, str(e)))
-        else:
+
             t = Telnet5680T.TelnetDevice(mac='', host=device_info.ip, username=device_info.login_name,
                                          password=device_info.login_password)
 
@@ -263,19 +261,15 @@ def pon_state_check():
                             ont_id_list.append(
                                 re.findall(r'(\d+)\s+[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}', ont)[0])
                     ont_count = len(set(ont_id_list))
-                    # confirm_flag = False
                     pon_flag = 0
                     if ont_count > 0:
                         for oid in ont_id_list:
                             register_info = t.display_ont_detail_info(p=str(fsp[2]), ontid=oid)
-                            logger.debug(register_info)
                             ont_last_down_cause, ont_last_down_time = None, None
                             for line in register_info:
                                 if re.search(r'Last down cause', line):
-                                    logger.debug(line)
                                     ont_last_down_cause = line.split(':')[1].strip()
                                 elif re.search(r'Last down time', line):
-                                    logger.debug(line)
                                     try:
                                         ont_last_down_time = datetime.datetime.strptime(
                                             re.findall(reg_datetime, line)[0], "%Y-%m-%d %H:%M:%S")
@@ -292,6 +286,11 @@ def pon_state_check():
                                                                                 "%Y-%m-%d %H:%M:%S") \
                                     and ont_last_down_cause.upper() == 'LOSI':
                                 pon_flag += 1
+                                logger.debug(pon_flag)
+                                if pon_flag == 2:
+                                    # 如果有两个光猫是因为光的原因下线，并且时间匹配PON口下线时间，则判断确认PON口是光的原因下线
+                                    logger.debug("满足条件跳出循环，此接口为LOSI原因下线，切光猫数大于2")
+                                    break
 
                     db_obj.status = 0 if pon_flag >= 2 else 2
 
@@ -306,6 +305,9 @@ def pon_state_check():
             db.session.commit()
             db.session.expire_all()
             db.session.close()
+
+        except Exception as e:
+            logger.error("Cannot find the ip {} in the device list, error {}".format(ip, str(e)))
 
     # start from here
     pon_check = [pon.ip for pon in PonAlarmRecord.query.filter_by(status=-1, ontid='PON').all()]
