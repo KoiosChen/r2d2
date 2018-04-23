@@ -20,6 +20,6 @@ import requests
 from sqlalchemy import or_, and_
 
 
-@main.route('/echarts_1', methods=['GET', 'POST'])
+@main.route('/echarts_1', methods=['GET'])
 def echarts_1():
     return render_template('echart_1.html')
