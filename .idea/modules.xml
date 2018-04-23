@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../WeBrokersTools/.idea/WeBrokersTools.iml" filepath="$PROJECT_DIR$/../WeBrokersTools/.idea/WeBrokersTools.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/r2d2.iml" filepath="$PROJECT_DIR$/.idea/r2d2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../walle/.idea/walle.iml" filepath="$PROJECT_DIR$/../walle/.idea/walle.iml" />
+    </modules>
+  </component>
+</project>

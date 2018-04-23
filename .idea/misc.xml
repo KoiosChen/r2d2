@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="IpnbSettings">
+    <option name="workingDirectory" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>Python</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>PyProtectedMemberInspection</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.6.5 virtualenv at ~/python/r2d2_env" project-jdk-type="Python SDK" />
+  <component name="SvnBranchConfigurationManager">
+    <option name="myConfigurationMap">
+      <map>
+        <entry key="$PROJECT_DIR$/../WeBrokersTools">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="svn://116.62.59.99/peter/WeBrokersTools/branches" />
+                  <option value="svn://116.62.59.99/peter/WeBrokersTools/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="svn://116.62.59.99/peter/WeBrokersTools/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../WeBrokersTools/app/proposal_result">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="svn://116.62.59.99/peter/propsal_result/branches" />
+                  <option value="svn://116.62.59.99/peter/propsal_result/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="svn://116.62.59.99/peter/propsal_result/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../WeBrokersTools/app/static/watermark_template">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="svn://116.62.59.99/peter/WeBrokersTools/trunk/app/static/watermark_template/branches" />
+                  <option value="svn://116.62.59.99/peter/WeBrokersTools/trunk/app/static/watermark_template/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="svn://116.62.59.99/peter/WeBrokersTools/trunk/app/static/watermark_template/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../WeBrokersTools/app/tmp_proposal">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="svn://116.62.59.99/peter/tmp_proposal/branches" />
+                  <option value="svn://116.62.59.99/peter/tmp_proposal/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="svn://116.62.59.99/peter/tmp_proposal/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../egret">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="trunkUrl" value="svn://192.168.168.66/python/egret" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../founderbn_nmp">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="svn://116.62.59.99/peter/founderbn_nmp/branches" />
+                  <option value="svn://116.62.59.99/peter/founderbn_nmp/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="svn://116.62.59.99/peter/founderbn_nmp/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../founderbn_nmp/app/static/bootstrap-progressbar-0.9.0">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="trunkUrl" value="" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="svn://116.62.59.99/peter/r2d2/branches" />
+                  <option value="svn://116.62.59.99/peter/r2d2/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="svn://116.62.59.99/peter/r2d2/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/app/static/bootstrap-progressbar-0.9.0">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="trunkUrl" value="" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../walle">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="trunkUrl" value="svn://192.168.168.66/python/walle" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="mySupportsUserInfoFilter" value="true" />
+  </component>
+</project>
