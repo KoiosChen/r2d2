@@ -5,51 +5,52 @@
 {% block page_content %}
     <h3>SYSLOG设置</h3>
     <form class="cmxform" id="commentForm" method="post" action="">
-    <div class="input-group col-md-2" style="margin-top: 0px; positon:relative;float: left; margin: 1ex">
-        <select class="selectpicker show-tick form-control" name="syslog_type" id="syslog_type" required>
-            <option value="" selected="selected">请选择告警类别</option>
-            <option value="normal">normal</option>
-            <option value="olt">olt</option>
-            <option value="filter">filter</option>
-        </select>
-    </div>
+        <div class="input-group col-md-2" style="margin-top: 0px; positon:relative;float: left; margin: 1ex">
+            <select class="selectpicker show-tick form-control" name="syslog_type" id="syslog_type" required>
+                <option value="" selected="selected">请选择告警类别</option>
+                <option value="normal">normal</option>
+                <option value="olt">olt</option>
+                <option value="filter">filter</option>
+            </select>
+        </div>
 
-    <div class="input-group col-md-2" style="margin-top: 0px; positon:relative;float: left; margin: 1ex">
-        <select class="selectpicker show-tick form-control" name="syalog_alarm_level" id="syalog_alarm_level" required>
-            <option value="" selected="selected">请选择告警级别</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-        </select>
-    </div>
+        <div class="input-group col-md-2" style="margin-top: 0px; positon:relative;float: left; margin: 1ex">
+            <select class="selectpicker show-tick form-control" name="syalog_alarm_level" id="syalog_alarm_level"
+                    required>
+                <option value="" selected="selected">请选择告警级别</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+        </div>
 
-    <div class="input-group col-md-2" style="margin-top: 0px; positon:relative;float: left;margin: 1ex">
-        <input type="text" class="form-control" placeholder="请输入过滤名称" id="syslog_alarm_name" required>
-    </div>
+        <div class="input-group col-md-2" style="margin-top: 0px; positon:relative;float: left;margin: 1ex">
+            <input type="text" class="form-control" placeholder="请输入过滤名称" id="syslog_alarm_name" required>
+        </div>
 
-    <div class="input-group col-md-4" style="margin-top: 0px; positon:relative;float: left;margin: 1ex">
-        <input type="text" class="form-control" placeholder="请输入过滤关键字" id="syslog_alarm_keyword" required>
-    </div>
+        <div class="input-group col-md-4" style="margin-top: 0px; positon:relative;float: left;margin: 1ex">
+            <input type="text" class="form-control" placeholder="请输入过滤关键字" id="syslog_alarm_keyword" required>
+        </div>
 
-    <p>
-      <input class="submit btn btn-info btn-search" style="float: right;margin: 1ex" type="submit" value="新增">
-    </p>
+        <p>
+            <input class="submit btn btn-info btn-search" style="float: right;margin: 1ex" type="submit" value="新增">
+        </p>
     </form>
 
 
     <table id="alarm_record_table" class="display">
         <thead>
-            <tr>
-                <th>编号</th>
-                <th>告警类型</th>
-                <th>告警级别</th>
-                <th>告警名称</th>
-                <th>告警关键字</th>
-                <th>状态</th>
-                <th>创建时间</th>
-                <th>编辑</th>
-                <th>删除</th>
-            </tr>
+        <tr>
+            <th>编号</th>
+            <th>告警类型</th>
+            <th>告警级别</th>
+            <th>告警名称</th>
+            <th>告警关键字</th>
+            <th>状态</th>
+            <th>创建时间</th>
+            <th>编辑</th>
+            <th>删除</th>
+        </tr>
         </thead>
         <tbody style="color:sienna;font-size:80%" id="alarm_content_body">
         </tbody>
@@ -64,10 +65,13 @@
                     <h4 class="modal-title" id="myModalLabel">修改SYSLOG配置</h4>
                 </div>
                 <div class="modal-body">
-                    <p>ID: <input type="text" name="id" id="id" readonly="true" style="border-style:none" /></p>
-                    <p>告警类别: <input type="text" name="called_phone" id="called_phone" readonly="true" style="border-style:none" /></p>
-                    <p>告警: <input type="text" name="call_status" id="call_status" readonly="true" style="border-style:none" /></p>
-                    <p>呼叫次数: <input type="text" name="call_times" id="call_times" readonly="true" style="border-style:none" /></p>
+                    <p>ID: <input type="text" name="id" id="id" readonly="true" style="border-style:none"/></p>
+                    <p>告警类别: <input type="text" name="called_phone" id="called_phone" readonly="true"
+                                    style="border-style:none"/></p>
+                    <p>告警: <input type="text" name="call_status" id="call_status" readonly="true"
+                                  style="border-style:none"/></p>
+                    <p>呼叫次数: <input type="text" name="call_times" id="call_times" readonly="true"
+                                    style="border-style:none"/></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -96,23 +100,24 @@
     <script type="text/javascript" charset="utf8" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 
     <!-- DataTables -->
-    <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8"
+            src="http://cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
     <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
     <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
     <script>
 
         <!--第三步初始化Datatables-->
-         function my_datatable() {
+        function my_datatable() {
             $('#alarm_record_table').DataTable({
                 "searching": false,
-                "serverSide" : true,
+                "serverSide": true,
                 "processing": true,
-                "ordering":  false,
+                "ordering": false,
                 "lengthChange": false,
                 "destroy": true,
                 "ajax": {
-                      url: '/syslog_config',
-                      type: 'POST'
+                    url: '/syslog_config',
+                    type: 'POST'
                 },
                 language: {
                     "sProcessing": "处理中...",
@@ -139,7 +144,8 @@
                     }
                 }
             });
-         }
+        }
+
         $(document).ready(function () {
             my_datatable()
         });
@@ -153,30 +159,31 @@
 
             var params = '{"syslog_type":"' + syslog_type + '","syslog_alarm_level":"' + syslog_alarm_level + '","syslog_alarm_name":"' + syslog_alarm_name + '","syslog_alarm_keyword":"' + syslog_alarm_keyword + '"}';
 
-            $.ajax({          
-                  type: "POST",          //提交方式          
-                  url: "syslog_config_add",  //提交的页面/方法名          
-                  data: params,         //参数（如果没有参数：null）          
-                  dataType: "text",        //类型          
-                  contentType: "application/json; charset=utf-8",          
-                           
-                  success: function(msg) {
-                      var msg_json = JSON.parse(msg);
-                      msg_json = JSON.parse(msg_json);
-                      if (msg_json['status'].match(/OK/)) {
-                          toastr.info(" 新增成功");
-                          refresh()
-                      }
-                      else {
-                          toastr.warning("新增失败");
-                      }
+            $.ajax({
+                type: "POST",          //提交方式          
+                url: "syslog_config_add",  //提交的页面/方法名          
+                data: params,         //参数（如果没有参数：null）          
+                dataType: "text",        //类型          
+                contentType: "application/json; charset=utf-8",
 
-                  },          
-                  error: function(xhr, msg, e) {            
-                    toastr.warning("新增失败");          
-                  }        
-            });
+                success: function (msg) {
+                    var msg_json = JSON.parse(msg);
+                    msg_json = JSON.parse(msg_json);
+                    if (msg_json['status'].match(/OK/)) {
+                        toastr.info(" 新增成功");
+                        refresh()
+                    }
+                    else {
+                        toastr.warning("新增失败");
+                    }
+
+                },
+                error: function (xhr, msg, e) {
+                    toastr.warning("新增失败");
+                }
+            });
         }
+
         // toastr options
         toastr.options = {
             "closeButton": true, //是否显示关闭按钮
@@ -193,48 +200,50 @@
             "hideMethod": "fadeOut" //消失时的动画方式
         };
         $.validator.setDefaults({
-            submitHandler: function() {
-              newone()
+            submitHandler: function () {
+                newone()
             }
         });
-        $().ready(function() {
+        $().ready(function () {
             $("#commentForm").validate();
         });
-        function HTMerDel(sc_id)
-        {
-        if(confirm("确定要删除该信息吗？删除将不能恢复！")) {
-            var params = '{"sc_id":"' + sc_id + '"}'
-            $.ajax({          
-                  type: "POST",          //提交方式          
-                  url: "syslog_config_delete",  //提交的页面/方法名          
-                  data: params,         //参数（如果没有参数：null）          
-                  dataType: "text",        //类型          
-                  contentType: "application/json; charset=utf-8",          
-                           
-                  success: function(msg) {
-                      var msg_json = JSON.parse(msg);
-                      msg_json = JSON.parse(msg_json);
-                      if (msg_json['status'].match(/OK/)) {
-                          toastr.info("删除成功");
-                          my_datatable()
-                      }
-                      else {
-                          toastr.warning("删除失败");
-                      }
 
-                  },          
-                  error: function(xhr, msg, e) {            
-                    toastr.warning("删除");          
-                  }        
-            });}
-        else {
-            toastr.warning('取消删除')
+        function HTMerDel(sc_id) {
+            if (confirm("确定要删除该信息吗？删除将不能恢复！")) {
+                var params = '{"sc_id":"' + sc_id + '"}'
+                $.ajax({
+                    type: "POST",          //提交方式          
+                    url: "syslog_config_delete",  //提交的页面/方法名          
+                    data: params,         //参数（如果没有参数：null）          
+                    dataType: "text",        //类型          
+                    contentType: "application/json; charset=utf-8",
+
+                    success: function (msg) {
+                        var msg_json = JSON.parse(msg);
+                        msg_json = JSON.parse(msg_json);
+                        if (msg_json['status'].match(/OK/)) {
+                            toastr.info("删除成功");
+                            my_datatable()
+                        }
+                        else {
+                            toastr.warning("删除失败");
+                        }
+
+                    },
+                    error: function (xhr, msg, e) {
+                        toastr.warning("删除");
+                    }
+                });
+            }
+            else {
+                toastr.warning('取消删除')
+            }
         }
-        }
+
         function editInfo(obj) {
             var x = document.getElementsByName('postli');
             if (x.length > 0) {
-                for(var i=x.length -1 ;i>=0;i--) {
+                for (var i = x.length - 1; i >= 0; i--) {
                     x[i].parentNode.removeChild(x[i]);
                 }
             }
@@ -250,9 +259,9 @@
                 data: params,
                 dataType: 'text',
                 contentType: "application/json; charset=utf-8",
-                success: function(msg) {
+                success: function (msg) {
                     var msg_json = JSON.parse(msg);
-                    msg_json = JSON.parse(msg_json); 
+                    msg_json = JSON.parse(msg_json);
                     $('#called_phone').val(msg_json['phoneNum']);
                     if (!msg_json['phoneNum']) {
                         $('#call_status').val('未呼叫');
@@ -262,9 +271,9 @@
                     }
                     $('#call_times').val(msg_json['times']);
                 },
-                error: function(xhr, msg, e) {            
-                    toastr.warning("系统繁忙");          
-              }
+                error: function (xhr, msg, e) {
+                    toastr.warning("系统繁忙");
+                }
             });
             $.ajax({
                 type: "POST",
@@ -272,21 +281,21 @@
                 data: params,
                 dataType: 'text',
                 contentType: "application/json; charset=utf-8",
-                success: function(msg) {
+                success: function (msg) {
                     var msg_json = JSON.parse(msg);
-                    msg_json = JSON.parse(msg_json); 
-                    $.each(msg_json, function (i) {
+                    msg_json = JSON.parse(msg_json);
+                    $.each(msg_json, function (i) {
                         var my_li = document.createElement('li');
                         my_li.setAttribute('class', 'post');
                         my_li.setAttribute('name', 'postli');
                         var div1 = document.createElement('div');
-                        div1.setAttribute('class','post-date');
+                        div1.setAttribute('class', 'post-date');
                         div1.innerHTML = msg_json[i]['timestamp'];
                         var div2 = document.createElement('div');
-                        div2.setAttribute('class','post-author');
-                        div2.innerHTML = msg_json[i]['username'] +'(' + msg_json[i]['phoneNum']+ ')';
+                        div2.setAttribute('class', 'post-author');
+                        div2.innerHTML = msg_json[i]['username'] + '(' + msg_json[i]['phoneNum'] + ')';
                         var div3 = document.createElement('div');
-                        div3.setAttribute('class','post-body');
+                        div3.setAttribute('class', 'post-body');
                         div3.innerHTML = msg_json[i]['body_html'].replace(/\n/g, '<br>');
                         my_li.appendChild(div1);
                         my_li.appendChild(div2);
@@ -294,14 +303,16 @@
                         document.getElementById('itemContainer').appendChild(my_li);
                     })
                 },
-                error: function(xhr, msg, e) {            
-                    toastr.warning("系统繁忙");          
-              }
+                error: function (xhr, msg, e) {
+                    toastr.warning("系统繁忙");
+                }
             });
-		}
-		$('#update').on('shown.bs.modal', function () {
-		    if (document.getElementsByName('postli').length>0) {
+        }
+
+        $('#update').on('shown.bs.modal', function () {
+            if (document.getElementsByName('postli').length > 0) {
                 setTimeout(show_jpage, 50);
+
                 function show_jpage() {
                     $("div.holder").jPages({
                         containerID: "itemContainer",

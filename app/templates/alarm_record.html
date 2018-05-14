@@ -69,7 +69,7 @@
                                     style="border-style:none"/></p>
                     <p>呼叫次数: <input type="text" name="call_times" id="call_times" readonly="true"
                                     style="border-style:none"/></p>
-                    <p>{{ wtf.form_field(modal_form.body) }}</p>
+{#                    <p>{{ wtf.form_field(modal_form.body) }}</p>#}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -118,7 +118,6 @@
 
 {% block scripts %}
     {{ super() }}
-    <script type="text/javascript" charset="utf8" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='jPages-master/css/jPages.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='jPages-master/css/animate.css') }}">

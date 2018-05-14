@@ -5,12 +5,13 @@ import threading
 import re
 from ..r2d2.SyslogWorker import py_syslog_olt_monitor, general_syslog_monitor
 from ..models import SyslogAlarmConfig, Syslog, syslog_facility, syslog_serverty
-from .. import db, logger, redis_db
+from .. import db, logger
+from .Counter import manage_key, count
 import datetime
+from .HashContent import md5_content
 
 
 def write_syslog_to_db(host, logmsg):
-
     n = logmsg.find('>')
     serverty = int(logmsg[1:n]) & 0x0007
     facility = (int(logmsg[1:n]) & 0x03f8) >> 3
@@ -36,11 +37,17 @@ def write_syslog_to_db(host, logmsg):
         db.session.close()
 
 
-def syslog_allocating(host, logmsg, syslog_alarm_config):
+def syslog_allocating(host, logmsg):
+    # 临时放到global的位置，后续要考虑动态刷新的问题
+    syslog_alarm_config = [(c.id, c.alarm_keyword, c.alarm_type) for c in
+                           SyslogAlarmConfig.query.filter_by(alarm_status=1).order_by(
+                               SyslogAlarmConfig.alarm_level).all()]
+
     match_flag = False
-    for key, alarm_type in syslog_alarm_config:
+    for id, key, alarm_type in syslog_alarm_config:
         regex_ = re.compile(key)
         if re.search(regex_, logmsg):
+            count(manage_key(key=str(id) + '_' + md5_content(key)), date_type='today')
             match_flag = True
             if alarm_type == 'olt':
                 logger.debug('allocating syslog task to olt syslog process')
@@ -63,10 +70,6 @@ class StartThread(threading.Thread):
     def __init__(self, q):
         threading.Thread.__init__(self)
         self.queue = q
-        # 临时放到global的位置，后续要考虑动态刷新的问题
-        self.syslog_alarm_config = [(c.alarm_keyword, c.alarm_type) for c in
-                                    SyslogAlarmConfig.query.filter_by(alarm_status=1).order_by(
-                                        SyslogAlarmConfig.alarm_level).all()]
 
     def run(self):
         while True:
@@ -76,7 +79,7 @@ class StartThread(threading.Thread):
             try:
                 logger.debug("{} {} {} {}".format(host, type(host), syslog_msg, type(syslog_msg)))
                 logger.debug("ip:{} msg:{}".format(host, syslog_msg))
-                syslog_allocating(host, syslog_msg, self.syslog_alarm_config)
+                syslog_allocating(host, syslog_msg)
             except Exception as e:
                 logger.error(e)
                 sys.exit(1)
@@ -111,20 +114,15 @@ def py_syslog():
         while 1:
             try:
                 q.put(sock.recvfrom(bufsize))
-                syslog_recv_counter = redis_db.get("syslog_recv_counter").decode()
-
-                if syslog_recv_counter:
-                    redis_db.set('syslog_recv_counter', int(syslog_recv_counter) + 1)
-                else:
-                    redis_db.set('syslog_recv_counter', 1)
+                count("syslog_recv_counter")
+                count(key='syslog_recv_counter', date_type='today')
 
             except Exception as e:
-                logger.warning(e)
+                logger.error('syslog running error: {}'.format_map(str(e)))
                 sys.exit(1)
-                # q.join()
 
     except Exception as e:
-        logger.warning(e)
+        logger.error('syslog running error: {}'.format_map(str(e)))
         sys.exit(1)
 
 

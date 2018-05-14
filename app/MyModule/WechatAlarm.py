@@ -7,15 +7,22 @@ import json
 import requests
 import time
 from ..models import TokenRecord
-from .. import db, logger, redis_db
+from .. import db, logger
 import datetime
 from .GetConfig import get_config
+from .Counter import count
 
 
 class WechatAlarm:
     def __init__(self):
         variable = {}
         tmp = get_config('wechat')
+
+        # 记录微信发送总数
+        count(key='wechatPreSend')
+
+        # 记录微信当天发送总数
+        count(key='wechatPreSend', date_type='today')
 
         variable['corpid'] = tmp['corpid']
         variable['corpsecret'] = tmp['corpsecret']
@@ -39,9 +46,9 @@ class WechatAlarm:
     def get_token(self, variable):
         r = requests.get(self.get_token_url % (variable['corpid'], variable['corpsecret']))
         js = r.json()
-        print('Accessing %s ' % r.url)
+        logger.debug('Accessing %s ' % r.url)
         if js.get('errcode') == 0:
-            print('Get access token %s successful' % js)
+            logger.debug('Get access token %s successful' % js)
             access_token = js.get('access_token')
             expires_in = js.get('expires_in')
             token_record = TokenRecord(unique_id=variable['corpid'], token=access_token, expire=expires_in,
@@ -50,7 +57,7 @@ class WechatAlarm:
             db.session.commit()
             return access_token
         else:
-            print('Get access token fail')
+            logger.error('Get access token fail')
             return False
 
     def init_text(self, content, agentid=None):
@@ -97,9 +104,16 @@ class WechatAlarm:
         return send_content
 
     def sendMsg(self, send_content):
-        r = requests.post(self.send_sms_url % self.access_token,
-                          data=json.dumps(send_content, ensure_ascii=False).encode('utf-8'), headers=self.headers)
-        result = r.json()
-        logger.debug(result)
+        try:
+            r = requests.post(self.send_sms_url % self.access_token,
+                              data=json.dumps(send_content, ensure_ascii=False).encode('utf-8'), headers=self.headers)
+            result = r.json()
+            logger.debug(result)
+
+            # 记录微信发送成功数量
+            count('wechatSent')
+            count('wechatSent', date_type='today')
+        except Exception as e:
+            logger.error('wechat send fail for {}'.format(e))
 
 

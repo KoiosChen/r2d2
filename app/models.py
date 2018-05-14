@@ -585,7 +585,7 @@ duty_schedule_status = {1: '正常',
                         6: '管理员删除',
                         7: '新增'}
 
-ALLOWED_EXTENSIONS = set(['xlsx', 'xls','pcap', 'pcapng'])
+ALLOWED_EXTENSIONS = set(['pcap', 'pcapng'])
 
 syslog_serverty = {0: "emergency",
                    1: "alert",

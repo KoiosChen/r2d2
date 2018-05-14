@@ -88,13 +88,15 @@ var SnippetLogin = function() {
             btn.addClass('m-loader m-loader--right m-loader--light').attr('disabled', true);
 
             form.ajaxSubmit({
-                url: '',
+                type: 'POST',
+                url: '/auth/login',
                 success: function(response, status, xhr, $form) {
                 	// similate 2s delay
                 	setTimeout(function() {
 	                    btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
 	                    showErrorMsg(form, 'danger', 'Incorrect username or password. Please try again.');
                     }, 2000);
+                	window.location.href='/'
                 }
             });
         });
@@ -179,7 +181,8 @@ var SnippetLogin = function() {
             btn.addClass('m-loader m-loader--right m-loader--light').attr('disabled', true);
 
             form.ajaxSubmit({
-                url: '',
+                method: 'post',
+                url: '/auth/login',
                 success: function(response, status, xhr, $form) { 
                 	// similate 2s delay
                 	setTimeout(function() {

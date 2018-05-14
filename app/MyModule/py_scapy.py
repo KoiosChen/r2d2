@@ -290,6 +290,7 @@ def do(file):
 
     # for line in print_cache:
     #     print(line, end='')
+
     if result:
         print_alarm = gen_tcp_alarm(result)
         return {'status': 'ok', 'content': {'detail': print_detail, 'verbose': print_alarm}}

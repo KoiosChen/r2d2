@@ -32,13 +32,14 @@ def py_syslog_olt_monitor(host, logmsg):
                 re.findall(r'FrameID:\s+(\d+),\s+SlotID:\s+(\d+),\s+PortID:\s+(\d+),\s+ONT\s+ID:\s+(\d+)', logmsg)[0]
             pon_history = PonAlarmRecord.query.filter_by(ip=host, frame=f, slot=s, port=p, ontid=ontid).first()
         except Exception as e:
+            logger.warning("split frame slot port error first time: {}, the msg is {}".format(e, logmsg))
             try:
                 f, s, p = \
                     re.findall(r'FrameID:\s+(\d+),\s+SlotID:\s+(\d+),\s+PortID:\s+(\d+)', logmsg)[0]
                 pon_history = PonAlarmRecord.query.filter_by(ip=host, frame=f, slot=s, port=p, ontid='PON').first()
                 ontid = "PON"
             except Exception as e:
-                logger.warning(e)
+                logger.warning("split frame slot port error second time: {}, the msg is {}".format(e, logmsg))
                 return False
 
         if pon_history:

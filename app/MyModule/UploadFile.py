@@ -18,7 +18,7 @@ class uploadfile():
     def is_image(self):
         fileName, fileExtension = os.path.splitext(self.name.lower())
 
-        if fileExtension in ['.jpg', '.png', '.jpeg', '.bmp']:
+        if fileExtension in ['.jpg', '.png', '.jpeg', '.bmp', '.pcap', '.pcapng']:
             return True
 
         return False

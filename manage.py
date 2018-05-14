@@ -20,8 +20,7 @@ syslog_process.daemon = True
 syslog_process.start()
 
 # 启动调度程序
-AllocateQueueWork.allocate_worker(thread_num=10)
-
+AllocateQueueWork.allocate_worker(thread_num=1)
 
 # 检查许可, 如果传入的参数为'1', 则用户若删除licence.pkl文件, 每次重启服务都会产生一个新的licence.pkl文件, 并可以使用7天
 init_status = '1'

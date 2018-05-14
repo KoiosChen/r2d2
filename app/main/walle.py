@@ -10,10 +10,11 @@ from .views import allowed_file, gen_file_name, IGNORED_FILES
 import os
 import json
 from ..MyModule.HashContent import md5_content
+from flask_socketio import SocketIO
 import uuid
 
 
-@main.route('/upload_pcap', methods=['GET', 'POST'])
+@main.route('/upload_pcap', methods=['GET'])
 def upload_pcap():
     return render_template('upload_pcap.html')
 
@@ -23,6 +24,7 @@ def join_pcap_queue():
     filename = request.form.get('filename')
     filepath = os.path.join(UPLOAD_FOLDER, md5_content(session['LOGINUSER']))
     this_uuid = md5_content(os.path.join(filepath, filename))
+    print('the file\'s md5 is', this_uuid)
     redis_record = redis_db.get(this_uuid)
     if not redis_record:
         print('no record')
@@ -62,6 +64,7 @@ def do_upload_pcap():
     this_dir = os.path.join(UPLOAD_FOLDER, user_dir)
 
     if request.method == 'POST':
+        print(request.files)
         files = request.files['file']
 
         if files:

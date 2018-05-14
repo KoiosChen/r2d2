@@ -39,30 +39,6 @@ class DeviceForm(Form):
         self.machine_room_name.choices = get_machine_room_by_area(session.get('permit_machine_room'))
 
 
-class RegistrationForm(Form):
-    duty_choice = [(str(jd.job_id), jd.job_name) for jd in JobDescription.query.all()]
-
-    username = StringField('用户名', validators=[DataRequired(),
-                                              Regexp('^[\u4E00-\u9FA5]*$', 0,
-                                                     '用户名只能为中文 ')])
-    email = StringField('邮箱', validators=[DataRequired(), Email(), Length(1, 64)])
-    phoneNum = StringField('电话')
-    password = PasswordField('请输入密码', validators=[DataRequired(), EqualTo('password2', message='请确认两次输入密码相同')])
-    password2 = PasswordField('请再次输入密码', validators=[DataRequired(), ])
-    role = SelectField('请选择角色')
-    area = SelectField('所属大区', validators=[DataRequired()])
-    machine_room_name = SelectMultipleField('请选择可管理的机房:', validators=[Optional()])
-    # team = StringField('所属小组', validators=[DataRequired()])
-    duty = SelectField('职务', validators=[Optional()], choices=duty_choice)
-    submit = SubmitField('Register')
-
-    def __init__(self):
-        super(RegistrationForm, self).__init__()
-        self.role.choices = [(str(k.id), k.name) for k in Role.query.all()]
-        self.machine_room_name.choices = get_machine_room_by_area(session.get('permit_machine_room'))
-        self.area.choices = [(str(a.id), a.area_name) for a in Area.query.all()]
-
-
 class AreaConfigForm(Form):
     area_name = StringField('请输入大区名称:', validators=[DataRequired()])
     area_machine_room = SelectMultipleField('请选择可管辖机房', validators=[DataRequired()])
