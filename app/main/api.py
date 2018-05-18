@@ -3,13 +3,11 @@ from . import main
 from ..models import AlarmRecord, PonAlarmRecord, Permission, PiRegister, User, PcapOrder, SyslogAlarmConfig, Syslog
 from .. import redis_db, logger, db
 import json
-from ..decorators import permission_required
 import re
 from flask_login import current_user
 import time
 import requests
 from collections import defaultdict
-import os
 import datetime
 from sqlalchemy import and_, func
 from ..MyModule.Counter import manage_key

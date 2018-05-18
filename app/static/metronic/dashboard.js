@@ -131,11 +131,6 @@ var todayWechatSendSuccess = function () {
 //== latest fifth alarms
 var latestFifthAlarms = function () {
     $('#div_latest_update').showLoading()
-    var msg1 = $('#msg-1');
-    var msg2 = $('#msg-2');
-    var msg3 = $('#msg-3');
-    var msg4 = $('#msg-4');
-    var msg5 = $('#msg-5');
 
     $.ajax({
         url: '/latest_fifth_alarms',
@@ -143,16 +138,11 @@ var latestFifthAlarms = function () {
         method: 'POST'
     }).done(function (results) {
         if (results.status === 'Success') {
-            msg1.text(results.content[0][0]);
-            msg2.text(results.content[1][0]);
-            msg3.text(results.content[2][0]);
-            msg4.text(results.content[3][0]);
-            msg5.text(results.content[4][0]);
-            $('#msg-date-1').text(results.content[0][1]);
-            $('#msg-date-2').text(results.content[1][1]);
-            $('#msg-date-3').text(results.content[2][1]);
-            $('#msg-date-4').text(results.content[3][1]);
-            $('#msg-date-5').text(results.content[4][1]);
+            for (var i=0; i<results.content.length; i++)
+            {
+                $('#msg-' + toString(i+1)).text(results.content[i][0]);
+                $('#msg-date-' + toString(i+1)).text(results.content[i][1]);
+            }
             $('#div_latest_update').hideLoading()
         }
         else {
@@ -243,6 +233,20 @@ var keywordsRanking = function () {
     }).done(function (results) {
         if (results.status === 'Success') {
             var this_colors = [];
+            var element = document.getElementById("div_legends");
+
+            while (element.hasChildNodes()) //当elem下还存在子节点时 循环继续
+            {
+                element.removeChild(element.firstChild);
+            }
+
+            var chart_element = document.getElementById("m_chart_revenue_change");
+
+            while (chart_element.hasChildNodes())
+            {
+                chart_element.removeChild(chart_element.firstChild)
+            }
+
             for (var d = 0; d < results.length; ++d) {
                 this_colors.push(mUtil.getColor(results.colors[d]));
 
@@ -261,7 +265,6 @@ var keywordsRanking = function () {
                 para.appendChild(new_span1);
                 para.appendChild(new_span2);
 
-                var element = document.getElementById("div_legends");
                 element.appendChild(para)
             }
             Morris.Donut({
