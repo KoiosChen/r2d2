@@ -1,2 +1,3 @@
-*.css linguist-language=python
+*.CSS linguist-language=python
 *.py linguist-language=python
+*.html linguist-language=python
