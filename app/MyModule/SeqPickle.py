@@ -97,7 +97,9 @@ def checkLicence(init='0'):
             lp['expire_in'] = 0
             scheduler_pause()
         else:
+            logger.info('The licence is in service. The time left now is {}'.format(lp['expire_in']))
             lp['expire_in'] -= check_interval
+            logger.info('The time left now is {}'.format(lp['expire_in']))
 
         check_licence.update_seq(binascii.b2a_hex(json.dumps(lp).encode()).decode())
         return lp

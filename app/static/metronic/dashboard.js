@@ -138,15 +138,14 @@ var latestFifthAlarms = function () {
         method: 'POST'
     }).done(function (results) {
         if (results.status === 'Success') {
-            for (var i=0; i<results.content.length; i++)
-            {
-                $('#msg-' + toString(i+1)).text(results.content[i][0]);
-                $('#msg-date-' + toString(i+1)).text(results.content[i][1]);
+            for (var i = 0; i < results.content.length; i++) {
+                $('#msg-' + String(i + 1)).text(results.content[i][0]);
+                $('#msg-date-' + String(i + 1)).text(results.content[i][1]);
             }
             $('#div_latest_update').hideLoading()
         }
         else {
-            msg1.text(results.content[0][0]);
+            $('#msg-1').text(results.content[0][0]);
             $('#msg-date-1').text(results.content[0][1]);
             $('#div_latest_update').hideLoading()
         }
@@ -177,10 +176,10 @@ var realTimeSyslogRate = function () {
             dataType: 'json',
             method: 'POST'
         }).done(function (results) {
-            pre_data = results.pre_data
-            data.push(results.content)
+            pre_data = results.pre_data;
+            data.push(results.content);
             $('#m_flotcharts_4').hideLoading();
-        })
+        });
 
         if (shift) {
             data.shift();
@@ -220,59 +219,28 @@ var realTimeSyslogRate = function () {
         addData(true);
         myChart.setOption(option);
     }, interval);
-}
+};
 
-//== Revenue Change.
-//** Based on Morris plugin - http://morrisjs.github.io/morris.js/
+
+// using ECHARTS http://echarts.baidu.com/tutorial.html#个性化图表的样式
 var keywordsRanking = function () {
-    $('#keywords_ranking').showLoading();
+    myChart2 = echarts.init(document.getElementById("m_chart_revenue_change"));
     $.ajax({
         url: '/keyAlarmRanking',
         dataType: 'json',
         method: 'POST'
     }).done(function (results) {
         if (results.status === 'Success') {
-            var this_colors = [];
-            var element = document.getElementById("div_legends");
-
-            while (element.hasChildNodes()) //当elem下还存在子节点时 循环继续
-            {
-                element.removeChild(element.firstChild);
-            }
-
-            var chart_element = document.getElementById("m_chart_revenue_change");
-
-            while (chart_element.hasChildNodes())
-            {
-                chart_element.removeChild(chart_element.firstChild)
-            }
-
-            for (var d = 0; d < results.length; ++d) {
-                this_colors.push(mUtil.getColor(results.colors[d]));
-
-                var para = document.createElement("div");
-                para.setAttribute("class", "m-widget14__legend");
-
-
-                var new_span1 = document.createElement("span");
-                new_span1.setAttribute("class", "m-widget14__legend-bullet m--bg-" + results.colors[d]);
-
-                var new_span2 = document.createElement("span");
-                new_span2.setAttribute("class", "m-widget14__legend-text");
-                var node = document.createTextNode(results.data[d].label);
-                new_span2.appendChild(node);
-
-                para.appendChild(new_span1);
-                para.appendChild(new_span2);
-
-                element.appendChild(para)
-            }
-            Morris.Donut({
-                element: 'm_chart_revenue_change',
-                data: results.data,
-                colors: this_colors
+            myChart2.setOption({
+                series: [
+                    {
+                        name: '关键字告警',
+                        type: 'pie',
+                        radius: '55%',
+                        data: results.data
+                    }
+                ]
             });
-            $('#keywords_ranking').hideLoading();
         }
         else {
             var element = document.getElementById("m_chart_revenue_change");
@@ -299,7 +267,8 @@ var keywordsRanking = function () {
             $('#keywords_ranking').hideLoading();
         }
     })
-}
+};
+
 
 //== Class initialization on page load
 jQuery(document).ready(function () {

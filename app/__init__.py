@@ -11,11 +11,11 @@ from flask_pagedown import PageDown
 import logging
 import redis
 from collections import defaultdict
-from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 import queue
 from app.MyModule import Snmp
 from flask_sqlalchemy import SQLAlchemy as SQLAlchemyBase
 from sqlalchemy.pool import NullPool
+import multiprocessing
 
 
 def nesteddict():

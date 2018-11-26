@@ -35,7 +35,8 @@ def _process_pkts(raw_pkt_cut_):
                 port_set = tuple(sorted([pkt['TCP'].sport, pkt['TCP'].dport]))
 
                 # 计算净载大小 0x002: syn  0x012: syn, ack   0x010:ack
-                if pkt['TCP'].flags == 0x002 or pkt['TCP'].flags == 0x012 or pkt['TCP'].flags == 0x011:
+                if pkt['TCP'].flags == 0x002 or pkt['TCP'].flags == 0x0c2 or pkt['TCP'].flags == 0x052 or pkt[
+                    'TCP'].flags == 0x012 or pkt['TCP'].flags == 0x011:
                     load_len = 1
                 else:
                     load_len = pkt['IP'].len - 20 - pkt['TCP'].dataofs * 4
@@ -151,9 +152,9 @@ def tcp_session_analyze(tcp_session, dns_query_result, dns_cname):
                 expect_nextseq = []
                 total_wait_time = [0]
                 for i, sn in enumerate(seq_nextseq):
-                    if sn[5] == int('0x002', 16):
+                    if sn[5] == int('0x002', 16) or sn[5] == int('0x0c2', 16):
                         handshake['syn'] = (sn[0], sn[2])
-                    elif sn[5] == int('0x012', 16):
+                    elif sn[5] == int('0x012', 16) or sn[5] == int('0x052'):
                         handshake['syn_ack'] = (sn[0], sn[2])
                     elif sn[5] == int('0x010', 16) and handshake.get('syn') and handshake['syn'][0] + 1 == sn[0]:
                         handshake['ack'] = (sn[0], sn[2])
@@ -267,7 +268,7 @@ def gen_tcp_alarm(tcp_result):
                                 problem_list.append('* {} {} {} {} {}\n'.format(k1, k2, k3, key, value))
             elif k2 == 'handshake':
                 if (isinstance(tcp_result[k1][k2], str) and tcp_result[k1][k2] == 'not complete') or (
-                            isinstance(tcp_result[k1][k2], float) and tcp_result[k1][k2] >= 50):
+                        isinstance(tcp_result[k1][k2], float) and tcp_result[k1][k2] >= 50):
                     dns_print = True
                     # if result[k1][k2] is not None or result[k1][k2] == 'not complete' or result[k1][k2] >= 50:
                     problem_list.append('* {} {} {}\n'.format(k1, k2, tcp_result[k1][k2]))

@@ -16,7 +16,7 @@ def get_cacti_pic(action, **kwargs):
         """
     
         :param action: 'cacti_view_pic_url', ...  which stored in table api_configure
-        :param kwargs: according to the action params, for exmaple: graph_id, rra_id. All of these params' type is string.
+        :param kwargs: according to the action params, for exmaple: graph_id, rra_id. All of these params' type are string.
         :return: none
         """
 

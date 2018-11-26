@@ -51,6 +51,8 @@ var DatatableRemoteAjaxDemo = function () {
 
             pagination: true,
 
+            autoWidth: true,
+
             toolbar: {
                 // toolbar items
                 items: {
@@ -69,7 +71,7 @@ var DatatableRemoteAjaxDemo = function () {
                     field: 'id',
                     title: '#',
                     sortable: false, // disable sort for this column
-                    width: 60,
+                    //width: 60,
                     selector: false,
                     textAlign: 'center',
                 }, {
@@ -77,20 +79,20 @@ var DatatableRemoteAjaxDemo = function () {
                     title: '设备名',
                     // sortable: 'asc', // default sort
                     filterable: false, // disable or enable filtering
-                    width: 100,
+                    //width: 100,
                     // basic templating support for column rendering,
                 }, {
                     field: 'device_ip',
                     title: 'IP',
-                    width: 100,
+                    //width: 100,
                 }, {
                     field: 'logmsg',
                     title: '日志信息',
-                    width: 400,
+                    //width: 400,
                 }, {
                     field: 'serverty',
                     title: '级别',
-                    width: 60,
+                    //width: 60,
                 }, {
                     field: 'logtime',
                     title: '日期',

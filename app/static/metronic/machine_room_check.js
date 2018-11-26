@@ -14,15 +14,7 @@ var DatatableRemoteAjaxDemo = function () {
                     read: {
                         // sample GET method
                         method: 'POST',
-                        url: '/alarm_record',
-                        params: {
-                            // custom query params
-                            query: {
-                                select_handler: $('#select_handler').val(),
-                                search_content: $('#search_content').val(),
-                                search_date: $('#m_daterangepicker_4 .form-control').val(),
-                            }
-                        },
+                        url: '/machine_room',
                         map: function (raw) {
                             // sample data mapping
                             var dataSet = raw;
@@ -70,57 +62,44 @@ var DatatableRemoteAjaxDemo = function () {
                     field: 'id',
                     title: '#',
                     sortable: false, // disable sort for this column
-                    //width: 50,
                     selector: false,
                     textAlign: 'center',
                 }, {
-                    field: 'alarm_content',
-                    title: '告警内容',
+                    field: 'machine_room_name',
+                    title: '机房名称',
                     textAlign: 'center',
                     // sortable: 'asc', // default sort
                     filterable: false, // disable or enable filtering
-                    //width: 650,
                     // basic templating support for column rendering,
                 }, {
-                    field: 'handler',
+                    field: 'machine_room_address',
+                    title: '机房地址',
                     textAlign: 'center',
-                    title: '处理人',
-                    //width: 60,
                 }, {
-                    field: 'handle_time',
+                    field: 'machine_room_level',
+                    title: '机房级别',
                     textAlign: 'center',
-                    title: '处理时间',
-                    //width: 150,
                 }, {
-                    field: 'alarm_time',
+                    field: 'machine_room_status',
+                    title: '机房状态',
                     textAlign: 'center',
-                    title: '告警时间',
-                    //width: 150,
-                    type: 'date',
-                    format: 'MM/DD/YYYY',
                 }, {
                     field: 'Actions',
-                    //width: 110,
                     textAlign: 'center',
                     title: '操作',
                     sortable: false,
                     overflow: 'visible',
                     template: function (row, index, datatable) {
-                        return '<a data-toggle="modal" data-target="#attachment" onclick="attachmentInfo(' + row.id + ')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Edit details">\
-                                    <i class="la la-ellipsis-h"></i>\
-                                </a>\
-                                <a data-toggle="modal" data-target="#update" onclick="editInfo(' + row.id + ')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Edit details">\
-                                    <i class="la la-edit"></i>\
-                                </a>\
-                                <a ' + 'onClick="return HTMerDel(' + row.id + ')" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Delete">\
+                        return '<a ' + 'onClick="return HTMerDel(' + row.id + ')" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Delete">\
                                     <i class="la la-trash"></i>\
                                 </a>\
                             ';
                     },
                 }],
         });
-
     };
+
+
 
     return {
         // public functions

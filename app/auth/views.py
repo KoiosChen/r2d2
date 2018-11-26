@@ -1,7 +1,6 @@
 from flask import render_template, redirect, request, url_for, flash, session, jsonify, json
 from flask_login import login_user, logout_user, login_required
 from ..models import User, Area
-from .forms import LoginForm
 from . import auth
 from .. import logger
 

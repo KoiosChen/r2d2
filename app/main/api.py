@@ -209,7 +209,8 @@ def wechat_counter():
 
             print(send, sent, percent_success_send)
 
-            return jsonify({'status': 'Success', 'content': str(percent_success_send) + '%'})
+            return jsonify({'status': 'Success',
+                            'content': str(percent_success_send) if percent_success_send <= 100 else 100 + '%'})
         else:
             return jsonify({'status': 'Fail', 'content': 0})
 
@@ -225,8 +226,8 @@ def realTimeSyslogRate():
     :return:
     """
     try:
-        print('pre_data is:', request.form.get('pre_data'))
-        print('interval is: ', request.form.get('interval'))
+        pre_data_ = int(request.form.get('pre_data', '0'))
+        interval_ = int(request.form.get('pre_data'))
         logger.debug('getting real time syslog receiving rate')
         syslog_counter_today = redis_db.get(manage_key(key='syslog_recv_counter', date_type='today'))
         if not syslog_counter_today:
@@ -236,11 +237,8 @@ def realTimeSyslogRate():
             syslog_counter_today = syslog_counter_today.decode()
         print('today\'s syslog counter is:', syslog_counter_today)
         return jsonify({'status': 'Success',
-                        'content': (
-                                           int(syslog_counter_today) - int(
-                                       request.form.get('pre_data', 0))) / (int(
-                            request.form.get('interval')) / 1000) if syslog_counter_today and request.form.get(
-                            'interval') else 0,
+                        'content': (int(syslog_counter_today) - pre_data_) / (
+                                    interval_ / 1000) if syslog_counter_today and interval_ and pre_data_ != 0 else 0,
                         'pre_data': syslog_counter_today if syslog_counter_today else 0
                         })
 
@@ -265,7 +263,7 @@ def latest_fifth_alarms():
             AlarmRecord.create_time.desc()).limit(5)
 
         fifth = [[info.content, info.create_time] for info in latest_alarms]
-        print('the fifth is ', fifth)
+        logger.debug('the fifth is {}'.format(fifth))
 
         if fifth:
             return jsonify({'status': 'Success',
@@ -314,7 +312,7 @@ def keyAlarmRanking():
             value = redis_db.get(k)
 
             if value:
-                key_name_counter.append({'label': v,
+                key_name_counter.append({'name': v,
                                          'value': value.decode()})
 
         if key_name_counter:
@@ -325,8 +323,9 @@ def keyAlarmRanking():
 
             counter_len = counter_len if counter_len <= 9 else 9
 
-            return jsonify({'status': 'Success', 'length': counter_len, 'colors': colors[:counter_len],
-                            'data': sorted_counter[:counter_len]})
+            print(sorted_counter[:counter_len])
+
+            return jsonify({'status': 'Success', 'data': sorted_counter[:counter_len], 'name': [n['name'] for n in key_name_counter]})
 
         else:
             return jsonify({'status': 'Fail', 'content': '暂无告警数据'})
@@ -399,7 +398,8 @@ def syslog_ranking():
                             'emergency_list': serverty_dict['emergency']})
         else:
             return jsonify(
-                {'status': 'Fail', 'labels': ['暂无Syslog记录'], 'error_list': ['0'], 'critical_list': ['0'], 'alert_list': ['0'],
+                {'status': 'Fail', 'labels': ['暂无Syslog记录'], 'error_list': ['0'], 'critical_list': ['0'],
+                 'alert_list': ['0'],
                  'emergency_list': ['0']})
 
     except Exception as e:

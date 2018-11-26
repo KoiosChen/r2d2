@@ -49,15 +49,10 @@ def syslog_config():
                  'alarm_keyword': sc.alarm_keyword,
                  'alarm_status': sc.alarm_status,
                  'alarm_create_time': sc.create_time,
-                 # """<a data-toggle="modal" data-target="#update" onclick="editInfo(""" + str(sc.id) + """)">
-                 #                              <img src="../static/edit.png" alt="" title=""
-                 #                              border="0" /></a>""",
-                 # """<td><a onClick="return HTMerDel(""" + str(sc.id)
-                 # + """);"><img src="../static/trash.png" alt="" title="" border="0" /></a></td>"""
                  }
                 for sc in SyslogAlarmConfig.query.offset(page_start).limit(length)]
 
-        recordsTotal = SyslogAlarmConfig.query.count() - 1
+        recordsTotal = SyslogAlarmConfig.query.count()
 
         rest = {
             "meta": {
@@ -117,6 +112,195 @@ def syslog_config_delete():
 
     if delete_target:
         db.session.delete(delete_target)
+        db.session.commit()
+        return jsonify(json.dumps({'status': 'OK'}))
+    else:
+        return jsonify(json.dumps({'status': 'False'}))
+
+
+@main.route('/machine_room', methods=['GET', 'POST'])
+@login_required
+@permission_required(Permission.NETWORK_MANAGER)
+def machine_room():
+    status_dict = {'0': '已删除', '1': '运行中', '2': '待定'}
+    level_dict = {'1': '核心机房', '2': '骨干机房', '3': 'POP点机房'}
+    if request.method == 'GET':
+        logger.info('User {} is checking machine room list'.format(session['LOGINNAME']))
+        return render_template('machine_room.html')
+    elif request.method == 'POST':
+        page_start = (int(request.form.get('datatable[pagination][page]', '0')) - 1) * 10
+        length = int(request.form.get('datatable[pagination][perpage]'))
+
+        data = [{'id': sc.id,
+                 'machine_room_name': sc.name,
+                 'machine_room_address': sc.address,
+                 'machine_room_level': level_dict[str(sc.level)],
+                 'machine_room_status': status_dict[str(sc.status)],
+                 }
+                for sc in MachineRoom.query.order_by(MachineRoom.id).offset(page_start).limit(length)]
+
+        recordsTotal = MachineRoom.query.count()
+
+        rest = {
+            "meta": {
+                "page": int(request.form.get('datatable[pagination][page]')),
+                "pages": int(recordsTotal) / int(length),
+                "perpage": int(length),
+                "total": int(recordsTotal),
+                "sort": "asc",
+                "field": "ShipDate"
+            },
+            "data": data
+        }
+        return jsonify(rest)
+
+
+@main.route('/machine_room_add', methods=['POST'])
+@login_required
+@permission_required(Permission.NETWORK_MANAGER)
+def machine_room_add():
+    params = request.get_data()
+    jl = params.decode('utf-8')
+    j = json.loads(jl)
+    print(j)
+    machine_room_name = j.get('machine_room_name')
+    machine_room_address = j.get('machine_room_address')
+    machine_room_level = j.get('machine_room_level')
+
+    if MachineRoom.query.filter(or_(MachineRoom.name.__eq__(machine_room_name),
+                                    MachineRoom.address.__eq__(machine_room_address))).all():
+        return jsonify(json.dumps({'status': 'False'}))
+    else:
+        last_machine_room = MachineRoom.query.order_by(MachineRoom.id.desc()).first()
+        if last_machine_room:
+            permit_value = hex(int(last_machine_room.permit_value, 16) << 1)
+        else:
+            permit_value = hex(1)
+        new_machine_room = MachineRoom(name=machine_room_name,
+                                       address=machine_room_address,
+                                       level=machine_room_level,
+                                       status='1',
+                                       permit_value=permit_value)
+        db.session.add(new_machine_room)
+        db.session.commit()
+        return jsonify(json.dumps({'status': 'OK'}))
+
+
+@main.route('/machine_room_delete', methods=['POST'])
+@login_required
+@permission_required(Permission.NETWORK_MANAGER)
+def machine_room_delete():
+    params = request.get_data()
+    jl = params.decode('utf-8')
+    j = json.loads(jl)
+    print(j)
+    sc_id = j.get('sc_id')
+
+    delete_target = MachineRoom.query.filter_by(id=sc_id).first()
+    delete_target.status = '0'
+
+    if delete_target:
+        db.session.add(delete_target)
+        db.session.commit()
+        return jsonify(json.dumps({'status': 'OK'}))
+    else:
+        return jsonify(json.dumps({'status': 'False'}))
+
+
+@main.route('/devices_manage', methods=['GET', 'POST'])
+@login_required
+@permission_required(Permission.NETWORK_MANAGER)
+def devices_manage():
+    status_dict = {'0': '已删除', '1': '运行中', '2': '待定'}
+    machine_dict = {m.id: m.name for m in MachineRoom.query.filter(MachineRoom.status.__ne__('0')).all()}
+    print(machine_dict)
+    if request.method == 'GET':
+        logger.info('User {} is checking device list'.format(session['LOGINNAME']))
+        machine_room_list = [{'id': m.id, 'name': m.name} for m in
+                             MachineRoom.query.filter(MachineRoom.status.__ne__('0')).all()]
+        return render_template('devices_manage.html', machine_room_list=machine_room_list)
+    elif request.method == 'POST':
+        page_start = (int(request.form.get('datatable[pagination][page]', '0')) - 1) * 10
+        length = int(request.form.get('datatable[pagination][perpage]'))
+
+        data = []
+        for sc in Device.query.filter(Device.machine_room_id.isnot(None)).order_by(Device.id).offset(page_start).limit(length):
+            print(sc)
+            print(MachineRoom.query.filter_by(id=sc.machine_room_id).first())
+            if sc.machine_room_id in machine_dict and MachineRoom.query.filter_by(
+                    id=sc.machine_room_id).first().status != 0:
+                data.append({'id': sc.id,
+                             'device_name': sc.device_name,
+                             'device_ip': sc.ip,
+                             'machine_room': machine_dict[sc.machine_room_id],
+                             'device_status': status_dict[str(sc.status)],
+                             })
+
+        recordsTotal = Device.query.filter(Device.machine_room_id.isnot(None)).count()
+        print(recordsTotal)
+
+        rest = {
+            "meta": {
+                "page": int(request.form.get('datatable[pagination][page]')),
+                "pages": int(recordsTotal) / int(length),
+                "perpage": int(length),
+                "total": int(recordsTotal),
+                "sort": "asc",
+                "field": "ShipDate"
+            },
+            "data": data
+        }
+        return jsonify(rest)
+
+
+@main.route('/device_add', methods=['GET', 'POST'])
+@login_required
+@permission_required(Permission.NETWORK_MANAGER)
+def device_add():
+    data = request.json
+    print(data)
+    device_name = data.get('device_name')
+    device_ip = data.get('device_ip')
+    machine_room = data.get('machine_room')
+
+    try:
+        device = Device(device_name=device_name,
+                        ip=device_ip,
+                        login_name='monitor',
+                        login_password='shf-k61-906',
+                        enable_password='',
+                        machine_room=MachineRoom.query.filter_by(id=machine_room).first(),
+                        status='1')
+        db.session.add(device)
+        db.session.commit()
+        logger.info('User {} add device {}  in machine room {} successful'.
+                    format(session.get('LOGINNAME'), device_name,
+                           MachineRoom.query.filter_by(id=machine_room).first()))
+        return jsonify({'status': 'OK', 'content': "设备添加成功"})
+    except Exception as e:
+        # 但是此处不能捕获异常
+        logger.error('User {} add device {}  in machine room {} fail, because {}'.
+                     format(session.get('LOGINNAME'), device_name,
+                            MachineRoom.query.filter_by(id=machine_room).first(), e))
+        db.session.rollback()
+        return jsonify({'status': 'False', 'content': "设备添加失败"})
+
+
+@main.route('/device_delete', methods=['POST'])
+@login_required
+@permission_required(Permission.NETWORK_MANAGER)
+def device_delete():
+    params = request.get_data()
+    jl = params.decode('utf-8')
+    j = json.loads(jl)
+    print(j)
+    sc_id = j.get('sc_id')
+
+    delete_target = Device.query.filter_by(id=sc_id).first()
+    delete_target.status = '0'
+
+    if delete_target:
+        db.session.add(delete_target)
         db.session.commit()
         return jsonify(json.dumps({'status': 'OK'}))
     else:
@@ -189,38 +373,6 @@ def update_licence():
             json.dumps({'status': 'OK', 'expire_date': expire_date, 'expire_in': expire_in, 'pubkey': pubkey}))
     else:
         return jsonify(json.dumps({'status': 'FAIL'}))
-
-
-@main.route('/add_device', methods=['GET', 'POST'])
-@login_required
-@permission_required(Permission.NETWORK_MANAGER)
-def add_device():
-    form = DeviceForm()
-    if form.validate_on_submit():
-        logger.info(
-            'User {} add device on machine room {}'.format(session.get('LOGINNAME'), form.machine_room_name.data))
-        try:
-            device = Device(device_name=form.device_name.data,
-                            ip=form.ip.data,
-                            login_name='monitor',
-                            login_password='shf-k61-906',
-                            enable_password='',
-                            machine_room=MachineRoom.query.filter_by(id=form.machine_room_name.data).first(),
-                            status=form.status.data)
-            db.session.add(device)
-            db.session.commit()
-            logger.info('User {} add device {}  in machine room {} successful'.
-                        format(session.get('LOGINNAME'), form.device_name.data,
-                               MachineRoom.query.filter_by(id=form.machine_room_name.data).first()))
-            flash('Add Successful')
-        except Exception as e:
-            # 但是此处不能捕获异常
-            logger.error('User {} add device {}  in machine room {} fail, because {}'.
-                         format(session.get('LOGINNAME'), form.device_name.data,
-                                MachineRoom.query.filter_by(id=form.machine_room_name.data).first(), e))
-            flash('Add device fail')
-        return redirect(url_for('.add_device'))
-    return render_template('add_device.html', form=form)
 
 
 @main.route('/user_register', methods=['POST'])
@@ -315,7 +467,7 @@ def local_user_check():
                  }
                 for u in User.query.filter(User.status.__eq__(1)).order_by(User.id).offset(page_start).limit(length)]
 
-        recordsTotal = User.query.filter_by(status=1).count() - 1
+        recordsTotal = User.query.filter_by(status=1).count()
 
         rest = {
             "meta": {
@@ -422,4 +574,3 @@ def user_delete():
             except Exception as e:
                 logger.error('Delete user fail:{}'.format(e))
                 return jsonify({'status': 'fail', 'content': '用户删除失败'})
-
