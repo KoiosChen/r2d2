@@ -61,3 +61,77 @@
 10/22/2018 15:31:24 - base-start - INFO - Scheduler started
 10/22/2018 15:31:24 - base-_process_jobs - DEBUG - Looking for jobs to run
 10/22/2018 15:31:24 - base-_process_jobs - DEBUG - No jobs; waiting until a job is added
+11/26/2018 13:34:48 - base-start - INFO - Scheduler started
+11/26/2018 13:34:48 - base-_process_jobs - DEBUG - Looking for jobs to run
+11/26/2018 13:34:48 - base-_process_jobs - DEBUG - No jobs; waiting until a job is added
+11/26/2018 13:34:53 - base-start - INFO - Scheduler started
+11/26/2018 13:34:53 - base-_process_jobs - DEBUG - Looking for jobs to run
+11/26/2018 13:34:53 - base-_process_jobs - DEBUG - No jobs; waiting until a job is added
+11/26/2018 13:44:42 - base-start - INFO - Scheduler started
+11/26/2018 13:44:42 - base-_process_jobs - DEBUG - Looking for jobs to run
+11/26/2018 13:44:42 - base-_process_jobs - DEBUG - No jobs; waiting until a job is added
+11/26/2018 13:44:45 - base-start - INFO - Scheduler started
+11/26/2018 13:44:45 - base-_process_jobs - DEBUG - Looking for jobs to run
+11/26/2018 13:44:45 - base-_process_jobs - DEBUG - No jobs; waiting until a job is added
+11/26/2018 13:46:38 - base-start - INFO - Scheduler started
+11/26/2018 13:46:38 - base-_process_jobs - DEBUG - Looking for jobs to run
+11/26/2018 13:46:38 - base-_process_jobs - DEBUG - No jobs; waiting until a job is added
+11/26/2018 14:50:31 - data-<module> - WARNING - Cannot read wireshark manuf database
+11/26/2018 14:50:31 - error-warning - WARNING - No route found for IPv6 destination :: (no default route?)
+11/26/2018 14:50:31 - base-start - INFO - Scheduler started
+11/26/2018 14:50:31 - base-_process_jobs - DEBUG - Looking for jobs to run
+11/26/2018 14:50:31 - base-_process_jobs - DEBUG - No jobs; waiting until a job is added
+11/26/2018 14:50:31 - py_syslog-py_syslog - INFO - ----------------syslog server is started----------------
+
+11/26/2018 14:50:31 - SeqPickle-checkLicence - INFO - The licence is in service. The time left now is 554010
+11/26/2018 14:50:31 - SeqPickle-checkLicence - INFO - The time left now is 553980
+11/26/2018 14:50:31 - SchedulerControl-scheduler_modify - INFO - {'test': '0', 'ups': '0', 'cacti': '0', 'syslog_without_olt': '0'}
+11/26/2018 14:50:31 - SchedulerControl-scheduler_modify - WARNING - {'status': 'test 提交计划任务失败'}
+11/26/2018 14:50:31 - SchedulerControl-scheduler_modify - WARNING - {'status': 'ups 提交计划任务失败'}
+11/26/2018 14:50:31 - SchedulerControl-scheduler_modify - WARNING - {'status': 'cacti 提交计划任务失败'}
+11/26/2018 14:50:31 - SchedulerControl-scheduler_modify - WARNING - {'status': 'syslog_without_olt 提交计划任务失败'}
+11/26/2018 14:52:49 - data-<module> - WARNING - Cannot read wireshark manuf database
+11/26/2018 14:52:49 - error-warning - WARNING - No route found for IPv6 destination :: (no default route?)
+11/26/2018 14:52:49 - base-start - INFO - Scheduler started
+11/26/2018 14:52:49 - base-_process_jobs - DEBUG - Looking for jobs to run
+11/26/2018 14:52:49 - base-_process_jobs - DEBUG - No jobs; waiting until a job is added
+11/26/2018 14:52:50 - py_syslog-py_syslog - INFO - ----------------syslog server is started----------------
+
+11/26/2018 14:52:50 - SeqPickle-checkLicence - INFO - The licence is in service. The time left now is 553980
+11/26/2018 14:52:50 - SeqPickle-checkLicence - INFO - The time left now is 553950
+11/26/2018 14:52:50 - SchedulerControl-scheduler_modify - INFO - {'test': '0', 'ups': '0', 'cacti': '0', 'syslog_without_olt': '0'}
+11/26/2018 14:52:50 - SchedulerControl-scheduler_modify - WARNING - {'status': 'test 提交计划任务失败'}
+11/26/2018 14:52:50 - SchedulerControl-scheduler_modify - WARNING - {'status': 'ups 提交计划任务失败'}
+11/26/2018 14:52:50 - SchedulerControl-scheduler_modify - WARNING - {'status': 'cacti 提交计划任务失败'}
+11/26/2018 14:52:50 - SchedulerControl-scheduler_modify - WARNING - {'status': 'syslog_without_olt 提交计划任务失败'}
+11/26/2018 14:54:38 - data-<module> - WARNING - Cannot read wireshark manuf database
+11/26/2018 14:54:39 - error-warning - WARNING - No route found for IPv6 destination :: (no default route?)
+11/26/2018 14:54:39 - base-start - INFO - Scheduler started
+11/26/2018 14:54:39 - base-_process_jobs - DEBUG - Looking for jobs to run
+11/26/2018 14:54:39 - base-_process_jobs - DEBUG - No jobs; waiting until a job is added
+11/26/2018 14:54:39 - py_syslog-py_syslog - INFO - ----------------syslog server is started----------------
+
+11/26/2018 14:54:39 - SeqPickle-checkLicence - INFO - The licence is in service. The time left now is 553950
+11/26/2018 14:54:39 - SeqPickle-checkLicence - INFO - The time left now is 553920
+11/26/2018 14:54:39 - SchedulerControl-scheduler_modify - INFO - {'test': '0', 'ups': '0', 'cacti': '0', 'syslog_without_olt': '0'}
+11/26/2018 14:54:39 - SchedulerControl-scheduler_modify - WARNING - {'status': 'test 提交计划任务失败'}
+11/26/2018 14:54:39 - SchedulerControl-scheduler_modify - WARNING - {'status': 'ups 提交计划任务失败'}
+11/26/2018 14:54:39 - SchedulerControl-scheduler_modify - WARNING - {'status': 'cacti 提交计划任务失败'}
+11/26/2018 14:54:39 - SchedulerControl-scheduler_modify - WARNING - {'status': 'syslog_without_olt 提交计划任务失败'}
+11/26/2018 14:54:39 - _internal-_log - INFO -  * Running on https://127.0.0.1:5000/ (Press CTRL+C to quit)
+11/26/2018 14:54:39 - _internal-_log - INFO -  * Restarting with stat
+11/26/2018 14:54:40 - data-<module> - WARNING - Cannot read wireshark manuf database
+11/26/2018 14:54:40 - error-warning - WARNING - No route found for IPv6 destination :: (no default route?)
+11/26/2018 14:54:41 - base-start - INFO - Scheduler started
+11/26/2018 14:54:41 - base-_process_jobs - DEBUG - Looking for jobs to run
+11/26/2018 14:54:41 - base-_process_jobs - DEBUG - No jobs; waiting until a job is added
+11/26/2018 14:54:41 - py_syslog-py_syslog - ERROR - SYSLOG ERROR: [Errno 48] Address already in use
+11/26/2018 14:54:41 - SeqPickle-checkLicence - INFO - The licence is in service. The time left now is 553920
+11/26/2018 14:54:41 - SeqPickle-checkLicence - INFO - The time left now is 553890
+11/26/2018 14:54:41 - SchedulerControl-scheduler_modify - INFO - {'test': '0', 'ups': '0', 'cacti': '0', 'syslog_without_olt': '0'}
+11/26/2018 14:54:41 - SchedulerControl-scheduler_modify - WARNING - {'status': 'test 提交计划任务失败'}
+11/26/2018 14:54:41 - SchedulerControl-scheduler_modify - WARNING - {'status': 'ups 提交计划任务失败'}
+11/26/2018 14:54:41 - SchedulerControl-scheduler_modify - WARNING - {'status': 'cacti 提交计划任务失败'}
+11/26/2018 14:54:41 - SchedulerControl-scheduler_modify - WARNING - {'status': 'syslog_without_olt 提交计划任务失败'}
+11/26/2018 14:54:41 - _internal-_log - WARNING -  * Debugger is active!
+11/26/2018 14:54:41 - _internal-_log - INFO -  * Debugger PIN: 266-692-437

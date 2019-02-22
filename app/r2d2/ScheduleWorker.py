@@ -289,7 +289,7 @@ def pon_state_check():
                                 logger.debug(pon_flag)
                                 if pon_flag == 2:
                                     # 如果有两个光猫是因为光的原因下线，并且时间匹配PON口下线时间，则判断确认PON口是光的原因下线
-                                    logger.debug("满足条件跳出循环，此接口为LOSI原因下线，切光猫数大于2")
+                                    logger.debug("满足条件跳出循环，此接口为LOSI原因下线，且光猫数大于2")
                                     break
 
                     db_obj.status = 0 if pon_flag >= 2 else 2

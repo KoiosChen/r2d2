@@ -513,6 +513,24 @@ class OntAccountInfo(db.Model):
     account_info = db.Column(db.String(256))
 
 
+class T2MRegister(db.Model):
+    __tablename__ = 't2m_register'
+    sysid = db.Column(db.String(100), primary_key=True)
+    username = db.Column(db.Integer, index=True, nullable=False)
+    encryption_method = db.Column(db.String(30), index=True, nullable=False)
+    ssurl = db.Column(db.String(50), index=True, nullable=False)
+    password = db.Column(db.String(50), index=True, nullable=False)
+    timeout = db.Column(db.String(10), index=True, nullable=False)
+    dns = db.Column(db.String(50), index=True, nullable=False)
+    configurl = db.Column(db.String(100), index=True, nullable=False)
+    times = db.Column(db.Integer, default=0)
+    last_register_time = db.Column(db.DateTime)
+    status = db.Column(db.SmallInteger)
+
+    def __repr__(self):
+        return '<T2M Register: %r>' % self.sysid
+
+
 class PiRegister(db.Model):
     __tablename__ = 'pi_register'
     sysid = db.Column(db.String(100), primary_key=True)
