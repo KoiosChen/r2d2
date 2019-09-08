@@ -2,9 +2,8 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="jdk" jdkName="Python 3.6.5 virtualenv at ~/python/r2d2_env" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.7 (r2d2)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="walle" />
     <orderEntry type="module" module-name="WeBrokersTools" />
     <orderEntry type="module" module-name="walle" />
   </component>

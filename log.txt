@@ -135,3 +135,234 @@
 11/26/2018 14:54:41 - SchedulerControl-scheduler_modify - WARNING - {'status': 'syslog_without_olt 提交计划任务失败'}
 11/26/2018 14:54:41 - _internal-_log - WARNING -  * Debugger is active!
 11/26/2018 14:54:41 - _internal-_log - INFO -  * Debugger PIN: 266-692-437
+05/28/2019 11:57:44 - base-start - INFO - Scheduler started
+05/28/2019 11:57:44 - base-_process_jobs - DEBUG - Looking for jobs to run
+05/28/2019 11:57:44 - base-_process_jobs - DEBUG - No jobs; waiting until a job is added
+05/28/2019 11:58:05 - base-start - INFO - Scheduler started
+05/28/2019 11:58:05 - base-_process_jobs - DEBUG - Looking for jobs to run
+05/28/2019 11:58:05 - base-_process_jobs - DEBUG - No jobs; waiting until a job is added
+05/29/2019 23:59:06 - data-load_protocols - INFO - Can't open /etc/ethertypes file
+05/29/2019 23:59:06 - data-<module> - WARNING - Cannot read wireshark manuf database
+05/29/2019 23:59:07 - error-warning - WARNING - No route found for IPv6 destination :: (no default route?)
+05/29/2019 23:59:07 - base-start - INFO - Scheduler started
+05/29/2019 23:59:07 - base-_process_jobs - DEBUG - Looking for jobs to run
+05/29/2019 23:59:07 - base-_process_jobs - DEBUG - No jobs; waiting until a job is added
+05/30/2019 00:02:49 - data-load_protocols - INFO - Can't open /etc/ethertypes file
+05/30/2019 00:02:49 - data-<module> - WARNING - Cannot read wireshark manuf database
+05/30/2019 00:02:49 - error-warning - WARNING - No route found for IPv6 destination :: (no default route?)
+05/30/2019 00:02:49 - base-start - INFO - Scheduler started
+05/30/2019 00:02:49 - base-_process_jobs - DEBUG - Looking for jobs to run
+05/30/2019 00:02:49 - base-_process_jobs - DEBUG - No jobs; waiting until a job is added
+05/30/2019 00:03:13 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:13 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:03:13 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:03:13 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:03:13 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:13 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:13 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:03:13 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:03:13 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:03:13 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:13 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:13 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:03:13 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:03:13 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:03:13 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:14 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:14 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:03:14 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:03:14 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:03:14 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:14 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:14 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:03:14 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:03:14 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:03:14 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:14 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:03:14 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:14 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:03:14 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:03:14 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:03:14 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:14 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:03:15 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:15 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:03:15 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:03:15 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:03:15 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:15 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:03:15 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:15 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:03:15 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:03:15 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:03:15 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:15 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:03:15 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:03:16 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:03:16 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:03:18 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:03:19 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:19 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:03:19 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:03:19 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:03:19 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:19 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:03:19 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:19 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:03:19 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:03:19 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:03:19 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:19 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:19 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:19 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:03:19 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:03:19 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:03:19 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:03:19 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:03:19 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:03:19 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:19 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:19 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:03:19 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:03:20 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:20 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:03:20 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:03:20 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:03:20 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:21 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:03:22 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:22 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:03:22 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:03:22 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:03:22 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:22 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:22 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:03:22 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:03:22 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:03:22 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:22 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:22 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:03:22 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:03:22 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:03:22 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:23 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:03:24 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:03:25 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:25 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:03:25 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:03:25 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:03:25 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:03:25 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:04:31 - data-load_protocols - INFO - Can't open /etc/ethertypes file
+05/30/2019 00:04:31 - data-<module> - WARNING - Cannot read wireshark manuf database
+05/30/2019 00:04:32 - error-warning - WARNING - No route found for IPv6 destination :: (no default route?)
+05/30/2019 00:04:32 - base-start - INFO - Scheduler started
+05/30/2019 00:04:32 - base-_process_jobs - DEBUG - Looking for jobs to run
+05/30/2019 00:04:32 - base-_process_jobs - DEBUG - No jobs; waiting until a job is added
+05/30/2019 00:04:41 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:41 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:04:41 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:04:41 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:04:41 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:41 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:41 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:04:41 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:04:41 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:04:41 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:41 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:41 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:04:41 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:04:41 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:04:41 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:42 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:42 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:04:42 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:04:42 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:04:42 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:42 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:42 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:04:42 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:04:42 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:04:42 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:42 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:04:42 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:42 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:04:42 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:04:42 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:04:42 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:42 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:04:43 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:43 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:04:43 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:04:43 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:04:43 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:43 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:43 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:04:43 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:04:43 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:04:43 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:43 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:04:43 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:04:43 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:04:44 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:04:44 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:04:46 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:04:47 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:47 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:04:47 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:04:47 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:04:47 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:47 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:47 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:04:47 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:04:47 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:04:47 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:47 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:04:47 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:47 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:04:47 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:04:47 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:04:47 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:47 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:04:47 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:04:47 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:47 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:04:47 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:04:47 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:04:47 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:48 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:48 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:04:48 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:04:48 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:04:48 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:48 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:48 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:04:48 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:04:48 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:04:48 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:49 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:04:50 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:50 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:04:50 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:04:50 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:04:50 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:50 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:50 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:04:50 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:04:50 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:04:50 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:50 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:04:51 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:04:52 - error-warning - WARNING - more DNS decompression loop detected
+05/30/2019 00:04:53 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:53 - error-warning - WARNING - DNS RR prematured end (ofs=70, len=9)
+05/30/2019 00:04:53 - error-warning - WARNING - DNS RR prematured end (ofs=402, len=9)
+05/30/2019 00:04:53 - error-warning - WARNING - more DNS RR prematured end (ofs=684, len=9)
+05/30/2019 00:04:53 - error-warning - WARNING - DNS decompression loop detected
+05/30/2019 00:04:53 - error-warning - WARNING - more DNS decompression loop detected
+08/27/2019 16:15:39 - data-load_protocols - INFO - Can't open /etc/ethertypes file
+08/27/2019 16:15:40 - data-<module> - WARNING - Cannot read wireshark manuf database
+08/27/2019 16:15:40 - error-warning - WARNING - No route found for IPv6 destination :: (no default route?)
+08/27/2019 16:15:40 - base-start - INFO - Scheduler started
+08/27/2019 16:15:40 - base-_process_jobs - DEBUG - Looking for jobs to run
+08/27/2019 16:15:40 - base-_process_jobs - DEBUG - No jobs; waiting until a job is added

@@ -154,7 +154,7 @@ def tcp_session_analyze(tcp_session, dns_query_result, dns_cname):
                 for i, sn in enumerate(seq_nextseq):
                     if sn[5] == int('0x002', 16) or sn[5] == int('0x0c2', 16):
                         handshake['syn'] = (sn[0], sn[2])
-                    elif sn[5] == int('0x012', 16) or sn[5] == int('0x052'):
+                    elif sn[5] == int('0x012', 16) or sn[5] == int('0x052', 16):
                         handshake['syn_ack'] = (sn[0], sn[2])
                     elif sn[5] == int('0x010', 16) and handshake.get('syn') and handshake['syn'][0] + 1 == sn[0]:
                         handshake['ack'] = (sn[0], sn[2])

@@ -1,7 +1,5 @@
-from socket import *
-from select import select
+from gevent import socket, select
 import logging
-import socket
 import sys
 import queue
 import threading
@@ -117,7 +115,7 @@ def run():
     try:
         while 1:
             try:
-                inputready, outputready, exceptready = select(input, [], [])
+                inputready, outputready, exceptready = select.select(input, [], [])
 
                 for s in inputready:
                     if s == sock:

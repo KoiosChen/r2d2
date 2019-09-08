@@ -37,7 +37,7 @@ def newsyslog():
 def syslog_search():
     device_list = {device.ip: device.device_name for device in Device.query.all()}
 
-    print(request.form)
+    logger.debug(request.form)
     device_ip = '%' + request.form.get('query[device_ip]', '') + '%'
     logmsg = '%' + request.form.get('query[logmsg]', '') + '%'
     search_date = request.form.get('query[search_date]', None)
@@ -56,7 +56,7 @@ def syslog_search():
 
         logger.debug('search syslog from {} to {}'.format(start_time, stop_time))
 
-    page_start = (int(request.form.get('datatable[pagination][page]', '0')) - 1) * 10 + 1
+    page_start = (int(request.form.get('datatable[pagination][page]', '0')) - 1) * 10
     length = int(request.form.get('datatable[pagination][perpage]'))
 
     if request.form.get('query[device_ip]') or request.form.get('query[logmsg]') or search_date or request.form.get(
@@ -140,7 +140,7 @@ def alarm_record():
 
         logger.debug('Searching datetime from {} to {}'.format(start_time, stop_time))
 
-        page_start = (int(request.form.get('datatable[pagination][page]', '0')) - 1) * 10 + 1
+        page_start = (int(request.form.get('datatable[pagination][page]', '0')) - 1) * 10
         length = int(request.form.get('datatable[pagination][perpage]'))
         page_end = page_start + length
 
